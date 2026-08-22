@@ -1,0 +1,22 @@
+Field,Buyer Input,Notes
+Project name,,Internal reference
+Product/category,,What is being sourced
+Target market/country,,Affects standards and labeling
+Reference product/link,,Optional
+Drawing/BOM/specification,,File or revision reference
+Material,,Include grade where relevant
+Critical dimensions/tolerances,,List CTQ items
+Required standards/certifications,,CE/UL/FCC/RoHS/etc as applicable
+Estimated order quantity,,Per order and annual volume if known
+Target unit price,,State currency and Incoterm basis
+Tooling budget,,If custom tooling is acceptable
+Sample quantity,,Prototype / golden sample needs
+Packaging requirement,,Retail/export/carton/branding
+Logo/labeling,,Artwork and language requirements
+Incoterm,,EXW/FOB/CIF/DDP etc
+Destination,,City/port/country
+Target sample date,,Desired date
+Target mass-production date,,Desired date
+Payment preference,,If material
+Inspection requirement,,Pre-shipment/in-process/etc
+Other constraints,,Anything that can kill the project
