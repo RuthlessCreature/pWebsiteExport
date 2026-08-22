@@ -1,3 +1,2 @@
 User-agent: *
 Allow: /
-Sitemap: https://pwebsite-export.workers.dev/sitemap.xml
