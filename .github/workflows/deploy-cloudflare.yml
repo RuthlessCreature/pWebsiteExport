@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   statuses: write
 
 concurrency:
@@ -21,40 +21,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
-      - name: Bootstrap real photography and case library
+      - name: Prepare licensed local photography
         shell: bash
         run: |
           set -euo pipefail
-          BOOTSTRAP=.github/workflows/apply-real-photo-case-library.yml
-          if [ -f "$BOOTSTRAP" ]; then
-            PAYLOAD=$(python -c 'import pathlib,re; t=pathlib.Path(".github/workflows/apply-real-photo-case-library.yml").read_text(); print(re.search(r"H4sIA[A-Za-z0-9+/=]+",t).group(0))')
-            test -n "$PAYLOAD"
-            printf '%s' "$PAYLOAD" | base64 -d > /tmp/payload.tar.gz
-            tar -xzf /tmp/payload.tar.gz -C .
-            mkdir -p public/assets/photos
-            curl -fL --retry 3 'https://images.pexels.com/photos/9800000/pexels-photo-9800000.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/ev-charging.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/28752153/pexels-photo-28752153/free-photo-of-close-up-of-precision-machined-metal-parts.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/precision-machining.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/36423822/pexels-photo-36423822/free-photo-of-glass-bottles-on-a-production-line-in-factory.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/glass-packaging.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/4481326/pexels-photo-4481326.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/mixed-sku-warehouse.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/15195270/pexels-photo-15195270/free-photo-of-hotel-room-welcome-amenities-photo.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/hospitality-supplies.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/3912477/pexels-photo-3912477.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/product-development.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/19841116/pexels-photo-19841116.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/industrial-vision.jpg
-            curl -fL --retry 3 'https://images.pexels.com/photos/36594160/pexels-photo-36594160/free-photo-of-industrial-worker-inspecting-batteries-in-warehouse.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/energy-storage.jpg
-            test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 8
-            rm -f public/assets/hero-sourcing.svg public/assets/service-pipeline.svg public/assets/case-grid.svg public/assets/company-desk.svg public/assets/contact-visual.svg public/assets/rfq-toolkit.svg public/assets/china-export-network.svg
-            ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
-            python -c "from pathlib import Path; import re; root=Path('public'); m=[(str(h),r) for h in root.rglob('*.html') for r in re.findall(r'(?:src|href)=\"(/[^\"]+)\"',h.read_text(encoding='utf-8')) if (r.startswith('/assets/') or r.startswith('/resources/')) and not (root/r.lstrip('/')).exists()]; print('Local asset references OK' if not m else m[:20]); raise SystemExit(1 if m else 0)"
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add -- public/index.html public/en/index.html public/zh/index.html public/cases/index.html public/services/index.html public/about/index.html public/contact/index.html public/resources/index.html public/assets/site.css public/assets/photos PHOTO_SOURCES.md
-            git add -u -- public/assets
-            git rm -f "$BOOTSTRAP"
-            git commit -m 'Add real photography and expanded success case library'
-            git push origin HEAD:main
-          fi
+          mkdir -p public/assets/photos
+          curl -fL --retry 3 'https://images.pexels.com/photos/9800000/pexels-photo-9800000.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/ev-charging.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/28752153/pexels-photo-28752153/free-photo-of-close-up-of-precision-machined-metal-parts.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/precision-machining.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/36423822/pexels-photo-36423822/free-photo-of-glass-bottles-on-a-production-line-in-factory.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/glass-packaging.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/4481326/pexels-photo-4481326.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/mixed-sku-warehouse.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/15195270/pexels-photo-15195270/free-photo-of-hotel-room-welcome-amenities-photo.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/hospitality-supplies.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/3912477/pexels-photo-3912477.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/product-development.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/19841116/pexels-photo-19841116.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/industrial-vision.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/36594160/pexels-photo-36594160/free-photo-of-industrial-worker-inspecting-batteries-in-warehouse.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/energy-storage.jpg
+          test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 8
+          ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
+          python -c "from pathlib import Path; import re; root=Path('public'); m=[(str(h),r) for h in root.rglob('*.html') for r in re.findall(r'(?:src|href)=\"(/[^\"]+)\"',h.read_text(encoding='utf-8')) if (r.startswith('/assets/') or r.startswith('/resources/')) and not (root/r.lstrip('/')).exists()]; print('Local asset references OK' if not m else m[:20]); raise SystemExit(1 if m else 0)"
 
       - name: Deploy Worker
         id: deploy
