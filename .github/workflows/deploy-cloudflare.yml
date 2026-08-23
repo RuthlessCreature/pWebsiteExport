@@ -30,7 +30,7 @@ jobs:
           set -euo pipefail
           BOOTSTRAP=.github/workflows/apply-real-photo-case-library.yml
           if [ -f "$BOOTSTRAP" ]; then
-            PAYLOAD=$(python -c 'import pathlib,re; t=pathlib.Path(".github/workflows/apply-real-photo-case-library.yml").read_text(); m=re.search(r"echo '\''([^'\'']+)'\'' \\| base64 -d",t); print(m.group(1) if m else "")')
+            PAYLOAD=$(python -c 'import pathlib,re; t=pathlib.Path(".github/workflows/apply-real-photo-case-library.yml").read_text(); print(re.search(r"H4sIA[A-Za-z0-9+/=]+",t).group(0))')
             test -n "$PAYLOAD"
             printf '%s' "$PAYLOAD" | base64 -d > /tmp/payload.tar.gz
             tar -xzf /tmp/payload.tar.gz -C .
