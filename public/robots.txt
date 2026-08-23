@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://pwebsite-export.nostalgia-ho.workers.dev/sitemap.xml

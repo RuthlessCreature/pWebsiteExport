@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" fill="none">
+<rect width="1200" height="640" rx="32" fill="#0D1B2D"/>
+<path d="M241 328C302 275 374 242 458 220C544 198 616 203 712 234C809 265 883 309 960 390" stroke="#78C2D6" stroke-width="10" stroke-linecap="round"/>
+<path d="M241 370C320 334 398 320 472 322C565 325 640 346 726 387C802 423 874 450 960 452" stroke="#F0B667" stroke-width="8" stroke-linecap="round"/>
+<circle cx="241" cy="328" r="18" fill="#78C2D6"/><circle cx="458" cy="220" r="18" fill="#78C2D6"/><circle cx="712" cy="234" r="18" fill="#78C2D6"/><circle cx="960" cy="390" r="18" fill="#78C2D6"/>
+<circle cx="241" cy="370" r="14" fill="#F0B667"/><circle cx="472" cy="322" r="14" fill="#F0B667"/><circle cx="726" cy="387" r="14" fill="#F0B667"/><circle cx="960" cy="452" r="14" fill="#F0B667"/>
+<rect x="76" y="128" width="144" height="88" rx="20" fill="#17385A" stroke="#3A6D98"/>
+<rect x="468" y="80" width="178" height="96" rx="20" fill="#17385A" stroke="#3A6D98"/>
+<rect x="886" y="120" width="220" height="96" rx="20" fill="#17385A" stroke="#3A6D98"/>
+<g fill="#EAF6FF" font-family="Arial, sans-serif" font-size="26" font-weight="700"><text x="110" y="182">Zhuhai</text><text x="510" y="142">China factories</text><text x="944" y="182">Global buyers</text></g>
+<circle cx="1030" cy="510" r="54" fill="#1C4469"/><circle cx="170" cy="516" r="44" fill="#20496F"/>
+</svg>
