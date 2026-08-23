@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" fill="none">
+<rect width="1200" height="760" rx="36" fill="#0E1D31"/>
+<rect x="64" y="88" width="1072" height="584" rx="28" fill="#132845" stroke="#29517B"/>
+<path d="M176 380H1024" stroke="#2A537B" stroke-width="4" stroke-dasharray="12 12"/>
+<g fill="#17385B" stroke="#3C6E9B">
+<rect x="110" y="240" width="150" height="278" rx="24"/>
+<rect x="306" y="200" width="150" height="318" rx="24"/>
+<rect x="502" y="166" width="150" height="352" rx="24"/>
+<rect x="698" y="200" width="150" height="318" rx="24"/>
+<rect x="894" y="240" width="150" height="278" rx="24"/>
+</g>
+<g font-family="Arial, sans-serif" fill="#EAF6FF" font-size="28" font-weight="700">
+<text x="136" y="278">Define</text><text x="332" y="238">Source</text><text x="522" y="204">Validate</text><text x="721" y="238">Control</text><text x="928" y="278">Deliver</text>
+</g>
+<g fill="#86C9DA"><circle cx="184" cy="338" r="18"/><circle cx="380" cy="298" r="18"/><circle cx="576" cy="264" r="18"/><circle cx="772" cy="298" r="18"/><circle cx="968" cy="338" r="18"/></g>
+<g stroke="#F0B667" stroke-width="8" stroke-linecap="round">
+<path d="M184 398H228"/><path d="M380 358H424"/><path d="M576 324H620"/><path d="M772 358H816"/><path d="M968 398H1012"/>
+</g>
+<g fill="#8AA6C0" font-family="Arial, sans-serif" font-size="18">
+<text x="132" y="448">brief · specs</text><text x="328" y="410">suppliers · RFQ</text><text x="516" y="378">samples · audits</text><text x="722" y="410">QC · changes</text><text x="916" y="448">docs · shipment</text>
+</g>
+</svg>

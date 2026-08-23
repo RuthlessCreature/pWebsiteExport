@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="880" viewBox="0 0 1200 880" fill="none">
+<rect width="1200" height="880" rx="36" fill="#0C1828"/>
+<rect x="60" y="60" width="340" height="240" rx="28" fill="#142947" stroke="#2D557D"/>
+<rect x="430" y="60" width="340" height="240" rx="28" fill="#142947" stroke="#2D557D"/>
+<rect x="800" y="60" width="340" height="240" rx="28" fill="#142947" stroke="#2D557D"/>
+<rect x="60" y="330" width="525" height="490" rx="28" fill="#142947" stroke="#2D557D"/>
+<rect x="615" y="330" width="525" height="230" rx="28" fill="#142947" stroke="#2D557D"/>
+<rect x="615" y="590" width="525" height="230" rx="28" fill="#142947" stroke="#2D557D"/>
+<g stroke="#8BC6D7" stroke-width="8" stroke-linecap="round"><path d="M100 116H212"/><path d="M470 116H572"/><path d="M838 116H956"/></g>
+<g fill="#F2F8FF" font-family="Arial, sans-serif" font-size="24" font-weight="700"><text x="100" y="156">EV Charging</text><text x="470" y="156">Automation</text><text x="838" y="156">Packaging</text><text x="100" y="394">Mixed sourcing operations</text><text x="653" y="394">Industrial parts</text><text x="653" y="654">Consumer private label</text></g>
+<g>
+<rect x="100" y="188" width="120" height="72" rx="18" fill="#1D4268" stroke="#4276A4"/>
+<rect x="470" y="188" width="120" height="72" rx="18" fill="#1D4268" stroke="#4276A4"/>
+<rect x="838" y="188" width="120" height="72" rx="18" fill="#1D4268" stroke="#4276A4"/>
+<circle cx="158" cy="224" r="18" fill="#F0B667"/>
+<path d="M526 226L554 198L580 214" stroke="#F0B667" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="896" cy="224" rx="28" ry="20" fill="#8BC6D7"/>
+</g>
+<g stroke="#5A82A7" stroke-width="6" stroke-dasharray="10 10"><path d="M112 438H528"/><path d="M112 610H528"/><path d="M660 438H1092"/><path d="M660 698H1092"/></g>
+<g fill="#9EB4C9" font-family="Arial, sans-serif" font-size="18"><text x="112" y="474">supplier matrix · sample plan · QC gate</text><text x="112" y="646">consolidation · labeling · export handoff</text><text x="660" y="474">drawings · tolerance · alternates</text><text x="660" y="734">branding · packaging · inspection</text></g>
+</svg>
