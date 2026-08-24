@@ -35,8 +35,26 @@ jobs:
           curl -fL --retry 3 'https://images.pexels.com/photos/3912477/pexels-photo-3912477.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/product-development.jpg
           curl -fL --retry 3 'https://images.pexels.com/photos/19841116/pexels-photo-19841116.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/industrial-vision.jpg
           curl -fL --retry 3 'https://images.pexels.com/photos/36594160/pexels-photo-36594160/free-photo-of-industrial-worker-inspecting-batteries-in-warehouse.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/energy-storage.jpg
-          test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 8
+          curl -fL --retry 3 'https://images.pexels.com/photos/4487363/pexels-photo-4487363.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/warehouse-racking.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/8089156/pexels-photo-8089156.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/kitchen-cabinets.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/18915643/pexels-photo-18915643.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/process-tanks.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/17641123/pexels-photo-17641123.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/solar-rooftop.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/10117742/pexels-photo-10117742.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/pendant-lighting.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/35645884/pexels-photo-35645884.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/industrial-pumps.jpg
+          curl -fL --retry 3 'https://images.pexels.com/photos/14805031/pexels-photo-14805031.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/woodworking.jpg
+          test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 15
+
+      - name: Validate static site and case library
+        shell: bash
+        run: |
+          set -euo pipefail
           ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
+          node --check public/assets/cases-part-1.js
+          node --check public/assets/cases-part-2.js
+          node --check public/assets/cases-part-3.js
+          node --check public/assets/cases-part-4.js
+          node --check public/assets/cases-render.js
+          node -e "global.window={}; require('./public/assets/cases-part-1.js'); require('./public/assets/cases-part-2.js'); require('./public/assets/cases-part-3.js'); require('./public/assets/cases-part-4.js'); if (!window.CASE_LIBRARY || window.CASE_LIBRARY.length !== 36) throw new Error('Expected 36 cases, got '+(window.CASE_LIBRARY&&window.CASE_LIBRARY.length)); console.log('Case library OK: '+window.CASE_LIBRARY.length);"
           python -c "from pathlib import Path; import re; root=Path('public'); m=[(str(h),r) for h in root.rglob('*.html') for r in re.findall(r'(?:src|href)=\"(/[^\"]+)\"',h.read_text(encoding='utf-8')) if (r.startswith('/assets/') or r.startswith('/resources/')) and not (root/r.lstrip('/')).exists()]; print('Local asset references OK' if not m else m[:20]); raise SystemExit(1 if m else 0)"
 
       - name: Deploy Worker
