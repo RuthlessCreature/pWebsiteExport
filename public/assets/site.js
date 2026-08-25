@@ -44,7 +44,7 @@ document.addEventListener('click',(e)=>{
   else if(href.startsWith('mailto:'))trackEvent('email_click','email');
   else if(href.startsWith('tel:'))trackEvent('phone_click','phone');
   else if(/^\/resources\/.*\.(?:csv|xlsx|pdf)(?:$|\?)/i.test(href))trackEvent('resource_download',href.split('?')[0]);
-  else if(/^\/(?:zh|ja|ru|es|pt\/)?contact\//.test(href)||href==='/contact/')trackEvent('contact_click',href.split('?')[0]);
+  else if(/^\/(?:(?:zh|ja|ru|es|pt)\/)?contact\//.test(href))trackEvent('contact_click',href.split('?')[0]);
 },true);
 
 const inquiry=document.querySelector('[data-inquiry-form]');
