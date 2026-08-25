@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/seo_audit.py scripts/notify_indexnow.py
+          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/build_html_sitemap.py scripts/html_sitemap_smoke.py scripts/patch_global_sitemap_link.py scripts/patch_static_stylesheets.py scripts/patch_image_loading.py scripts/add_image_dimensions.py scripts/seo_audit.py scripts/notify_indexnow.py
           python scripts/build_seo_clean.py
           python scripts/seo_enhance.py
           python scripts/build_guides.py
@@ -109,7 +109,7 @@ jobs:
           ! grep -RniE 'datePublished|dateModified' public --include='*.html'
           test -s public/llms.txt
           grep -q 'https://pomerol.in/resources/guides/' public/llms.txt
-          test "$(cat public/02289c9f560410ae6b1db5dab06ccccc.txt)" = '02289c9f560410ae6b1db5dab06ccccc'
+          python -c "import sys; from pathlib import Path; sys.path.insert(0,'scripts'); import notify_indexnow; p=Path('public')/f'{notify_indexnow.KEY}.txt'; assert p.is_file() and p.read_text(encoding='utf-8').strip()==notify_indexnow.KEY; print('Active IndexNow verification file OK')"
           python -c "from pathlib import Path; import re; root=Path('public'); m=[(str(h),r) for h in root.rglob('*.html') for r in re.findall(r'(?:src|href)=\"(/[^\"]+)\"',h.read_text(encoding='utf-8')) if (r.startswith('/assets/') or r.startswith('/resources/')) and not (root/r.lstrip('/')).exists()]; print('Local asset references OK' if not m else m[:20]); raise SystemExit(1 if m else 0)"
 
       - name: Deploy Worker
