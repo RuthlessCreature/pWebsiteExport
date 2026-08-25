@@ -1,4 +1,4 @@
-(()=>{const href='/assets/photo-cases.css';if(!document.querySelector(`link[href="${href}"]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l);}})();
+(()=>{for(const href of ['/assets/photo-cases.css','/assets/locale.css']){if(!document.querySelector(`link[href="${href}"]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l);}}})();
 
 const CONTACT={name:'Yusuf',email:'abd.yusuf.ibrahim.mustafa@gmail.com',phoneDisplay:'+86 132 4269 4270',phone:'+8613242694270'};
 
@@ -12,16 +12,10 @@ const CONTACT={name:'Yusuf',email:'abd.yusuf.ibrahim.mustafa@gmail.com',phoneDis
 })();
 
 (()=>{
-  const replacements=[
-    ['Nicole',CONTACT.name],['13923387986@163.com',CONTACT.email],['+86 139 2338 7986',CONTACT.phoneDisplay],['+8613923387986',CONTACT.phone]
-  ];
+  const replacements=[['Nicole',CONTACT.name],['13923387986@163.com',CONTACT.email],['+86 139 2338 7986',CONTACT.phoneDisplay],['+8613923387986',CONTACT.phone]];
   const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=walker.nextNode()){for(const [a,b] of replacements){if(n.nodeValue&&n.nodeValue.includes(a))n.nodeValue=n.nodeValue.split(a).join(b);}}
   document.querySelectorAll('a[href]').forEach(a=>{let h=a.getAttribute('href')||'';h=h.replace('mailto:13923387986@163.com','mailto:'+CONTACT.email).replace('tel:+8613923387986','tel:'+CONTACT.phone).replace('https://wa.me/8613923387986','https://wa.me/'+CONTACT.phone.replace('+',''));a.setAttribute('href',h);});
 })();
 
-const menuButton=document.querySelector('[data-menu]');const nav=document.querySelector('[data-nav]');
-if(menuButton&&nav){menuButton.addEventListener('click',()=>nav.classList.toggle('open'));}
-const inquiry=document.querySelector('[data-inquiry-form]');
-if(inquiry){inquiry.addEventListener('submit',(e)=>{e.preventDefault();const data=new FormData(inquiry);const lines=[
-  'Hello Pomerol International,','',`Name: ${data.get('name')||''}`,`Company: ${data.get('company')||''}`,`Email: ${data.get('email')||''}`,`Country/Market: ${data.get('market')||''}`,`Product / Category: ${data.get('product')||''}`,`Estimated quantity: ${data.get('quantity')||''}`,`Target timing: ${data.get('timing')||''}`,'',String(data.get('message')||'')
-];const subject=encodeURIComponent(`Sourcing inquiry — ${data.get('product')||data.get('company')||'new project'}`);const body=encodeURIComponent(lines.join('\n'));window.location.href=`mailto:${CONTACT.email}?subject=${subject}&body=${body}`;});}
+const menuButton=document.querySelector('[data-menu]');const nav=document.querySelector('[data-nav]');if(menuButton&&nav){menuButton.addEventListener('click',()=>nav.classList.toggle('open'));}
+const inquiry=document.querySelector('[data-inquiry-form]');if(inquiry){inquiry.addEventListener('submit',(e)=>{e.preventDefault();const data=new FormData(inquiry);const lines=['Hello Pomerol International,','',`Name: ${data.get('name')||''}`,`Company: ${data.get('company')||''}`,`Email: ${data.get('email')||''}`,`Country/Market: ${data.get('market')||''}`,`Product / Category: ${data.get('product')||''}`,`Estimated quantity: ${data.get('quantity')||''}`,`Target timing: ${data.get('timing')||''}`,'',String(data.get('message')||'')];const subject=encodeURIComponent(`Sourcing inquiry — ${data.get('product')||data.get('company')||'new project'}`);const body=encodeURIComponent(lines.join('\n'));window.location.href=`mailto:${CONTACT.email}?subject=${subject}&body=${body}`;});}
