@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -65,8 +65,8 @@ def main() -> None:
     canon_by_file: dict[Path, str] = {}
     file_by_canon: dict[str, Path] = {}
     alternate_by_canon: dict[str, dict[str, str]] = {}
-    title_count: Counter[str] = Counter()
-    desc_count: Counter[str] = Counter()
+    title_canons: defaultdict[str, set[str]] = defaultdict(set)
+    desc_canons: defaultdict[str, set[str]] = defaultdict(set)
     inbound: defaultdict[str, int] = defaultdict(int)
 
     for p in html_files:
@@ -95,9 +95,9 @@ def main() -> None:
         desc = re.sub(r'\s+', ' ', descs[0]).strip() if descs else ''
         can = cans[0]
         if title:
-            title_count[title] += 1
+            title_canons[title].add(can)
         if desc:
-            desc_count[desc] += 1
+            desc_canons[desc].add(can)
         if not can.startswith(BASE + '/'):
             errors.append(f'{route}: canonical outside production host: {can}')
         canon_by_file[p] = can
@@ -166,12 +166,12 @@ def main() -> None:
             if source_can not in target_alts.values():
                 errors.append(f'{source_can}: hreflang target not reciprocal: {target_can}')
 
-    for value, count in title_count.items():
-        if count > 1:
-            warnings.append(f'duplicate title x{count}: {value[:120]}')
-    for value, count in desc_count.items():
-        if count > 1:
-            warnings.append(f'duplicate description x{count}: {value[:140]}')
+    for value, canons in title_canons.items():
+        if len(canons) > 1:
+            warnings.append(f'duplicate title across {len(canons)} canonicals: {value[:120]}')
+    for value, canons in desc_canons.items():
+        if len(canons) > 1:
+            warnings.append(f'duplicate description across {len(canons)} canonicals: {value[:140]}')
 
     important_prefixes = (
         BASE + '/resources/guides/', BASE + '/zh/resources/guides/', BASE + '/ja/resources/guides/',
