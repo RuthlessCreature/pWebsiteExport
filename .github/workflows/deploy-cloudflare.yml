@@ -44,11 +44,27 @@ jobs:
           curl -fL --retry 3 'https://images.pexels.com/photos/14805031/pexels-photo-14805031.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/woodworking.jpg
           test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 15
 
+      - name: Normalize public contact identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' f; do
+            sed -i \
+              -e 's/Nicole/Yusuf/g' \
+              -e 's/13923387986@163.com/abd.yusuf.ibrahim.mustafa@gmail.com/g' \
+              -e 's/+86 139 2338 7986/+86 132 4269 4270/g' \
+              -e 's/+8613923387986/+8613242694270/g' \
+              -e 's/8613923387986/8613242694270/g' "$f"
+          done < <(find public -type f \( -name '*.html' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' \) -print0)
+
       - name: Validate static site and case library
         shell: bash
         run: |
           set -euo pipefail
           ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
+          ! grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|8613923387986' public --include='*.html' --include='*.js'
+          for f in public/en/index.html public/zh/index.html public/ja/index.html public/ru/index.html public/es/index.html public/pt/index.html public/ja/cases/index.html public/ru/cases/index.html public/es/cases/index.html public/pt/cases/index.html; do test -s "$f"; done
+          node --check public/assets/site.js
           node --check public/assets/cases-part-1.js
           node --check public/assets/cases-part-2.js
           node --check public/assets/cases-part-3.js
