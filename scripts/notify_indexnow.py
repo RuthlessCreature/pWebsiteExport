@@ -4,7 +4,7 @@ import json,time,urllib.error,urllib.parse,urllib.request,xml.etree.ElementTree 
 
 HOST='pomerol.in'
 BASE='https://pomerol.in'
-KEY='02289c9f560410ae6b1db5dab06ccccc'
+KEY='6ef27e4a81efe1ff6c679ee852d012f2'
 KEY_URL=f'{BASE}/{KEY}.txt'
 ENDPOINTS=['https://api.indexnow.org/indexnow','https://www.bing.com/indexnow']
 UA='PomerolInternational-IndexNow/2.0 (+https://pomerol.in/)'
@@ -47,8 +47,6 @@ def http_error_body(e):
 
 
 def bulk_submit(endpoint,urls):
-    # Explicit keyLocation is accepted by the IndexNow protocol and removes ambiguity
-    # about where the verification crawler should retrieve the key file.
     payload=json.dumps({'host':HOST,'key':KEY,'keyLocation':KEY_URL,'urlList':urls},separators=(',',':')).encode('utf-8')
     req=urllib.request.Request(endpoint,data=payload,headers={
         'Content-Type':'application/json; charset=utf-8',
@@ -91,8 +89,6 @@ def main():
     if not urls:
         raise SystemExit('No sitemap URLs')
     print('IndexNow diagnostic context: host=',HOST,'keyLocation=',KEY_URL,'sitemapURLs=',len(urls))
-
-    # First submit one high-value URL. This isolates ownership/key validation from bulk payload issues.
     priority=next((u for u in urls if u.endswith('/en/')),urls[0])
     single_ok=False
     for endpoint in ENDPOINTS:
@@ -101,9 +97,6 @@ def main():
             break
     if not single_ok:
         raise SystemExit(3)
-
-    # Then send the current canonical set in modest chunks. This is far below the protocol limit,
-    # but smaller batches make provider-specific rejection easier to diagnose.
     chunk_size=100
     for start in range(0,len(urls),chunk_size):
         chunk=urls[start:start+chunk_size]
