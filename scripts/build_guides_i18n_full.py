@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import build_guides_i18n as b
+import build_html_sitemap
+import html_sitemap_smoke
 import seo_audit
 
 b.PRIORITY = list(b.EN.keys())
@@ -11,6 +13,7 @@ def main():
     b.build_pages(cases)
     b.patch_english_hreflang()
     b.patch_local_homes()
+    build_html_sitemap.main()
     b.rebuild_sitemap()
 
     localized = []
@@ -45,8 +48,16 @@ def main():
     for code in b.LOCALES:
         for slug in b.PRIORITY:
             assert f'https://pomerol.in/{code}/resources/guides/{slug}/' in sitemap, (code, slug)
+    assert 'https://pomerol.in/sitemap/' in sitemap
+
+    html_sitemap = b.PUBLIC / 'sitemap' / 'index.html'
+    assert html_sitemap.is_file(), html_sitemap
+    st = html_sitemap.read_text(encoding='utf-8')
+    assert st.count('data-sitemap-link') >= 120, st.count('data-sitemap-link')
+    assert 'data-html-sitemap-link' in (b.PUBLIC / 'resources' / 'index.html').read_text(encoding='utf-8')
 
     print('Full multilingual guide SEO OK: 40 localized detail pages + 5 hubs + 8 reciprocal hreflang clusters')
+    html_sitemap_smoke.main()
     seo_audit.main()
 
 
