@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import add_image_dimensions
 import build_guides_i18n as b
 import build_html_sitemap
 import html_sitemap_smoke
@@ -18,6 +19,7 @@ def main():
     build_html_sitemap.main()
     patch_global_sitemap_link.main()
     b.rebuild_sitemap()
+    add_image_dimensions.main()
 
     localized = []
     for code in b.LOCALES:
