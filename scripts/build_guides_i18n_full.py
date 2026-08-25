@@ -3,6 +3,7 @@ from pathlib import Path
 import build_guides_i18n as b
 import build_html_sitemap
 import html_sitemap_smoke
+import notify_indexnow
 import patch_global_sitemap_link
 import seo_audit
 
@@ -61,8 +62,13 @@ def main():
     footer_links = sum(1 for p in b.PUBLIC.rglob('*.html') if 'data-site-directory-link' in p.read_text(encoding='utf-8'))
     assert footer_links >= 120, footer_links
 
+    key_file = b.PUBLIC / f'{notify_indexnow.KEY}.txt'
+    assert key_file.is_file(), key_file
+    assert key_file.read_text(encoding='utf-8').strip() == notify_indexnow.KEY
+
     print('Full multilingual guide SEO OK: 40 localized detail pages + 5 hubs + 8 reciprocal hreflang clusters')
     print(f'Global sitemap footer discovery OK: {footer_links} HTML pages link to /sitemap/')
+    print(f'Current IndexNow key source OK: {notify_indexnow.KEY}')
     html_sitemap_smoke.main()
     seo_audit.main()
 
