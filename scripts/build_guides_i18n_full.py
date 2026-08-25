@@ -3,6 +3,7 @@ from pathlib import Path
 import add_image_dimensions
 import build_guides_i18n as b
 import build_html_sitemap
+import enhance_hero_cases
 import html_sitemap_smoke
 import notify_indexnow
 import patch_global_sitemap_link
@@ -18,6 +19,7 @@ def main():
     b.build_pages(cases)
     b.patch_english_hreflang()
     b.patch_local_homes()
+    enhance_hero_cases.main()
     build_html_sitemap.main()
     patch_global_sitemap_link.main()
     b.rebuild_sitemap()
@@ -68,11 +70,15 @@ def main():
     footer_links = sum(1 for p in b.PUBLIC.rglob('*.html') if 'data-site-directory-link' in p.read_text(encoding='utf-8'))
     assert footer_links >= 120, footer_links
 
+    hero_cases = sum(1 for p in (b.PUBLIC / 'case-studies').glob('*/index.html') if 'data-hero-control-plan' in p.read_text(encoding='utf-8'))
+    assert hero_cases == 10, hero_cases
+
     key_file = b.PUBLIC / f'{notify_indexnow.KEY}.txt'
     assert key_file.is_file(), key_file
     assert key_file.read_text(encoding='utf-8').strip() == notify_indexnow.KEY
 
     print('Full multilingual guide SEO OK: 40 localized detail pages + 5 hubs + 8 reciprocal hreflang clusters')
+    print(f'Hero case depth OK: {hero_cases} detailed sourcing control plans')
     print(f'Global sitemap footer discovery OK: {footer_links} HTML pages link to /sitemap/')
     print(f'Current IndexNow key source OK: {notify_indexnow.KEY}')
     html_sitemap_smoke.main()

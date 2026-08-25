@@ -1,0 +1,232 @@
+{
+  "01": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Separate AC and DC charger requirements by output power, connector standard, enclosure rating, communications protocol and destination-market certification.",
+      "Freeze commercial assumptions for sample quantity, pilot quantity, production MOQ, branding, spare parts and warranty response before comparing quotations.",
+      "Require a common compliance-document list so certificates, test reports and model coverage can be compared on the same basis."
+    ],
+    "screening": [
+      "Confirm the supplier is the manufacturer or clearly identify any trading-company role and the actual production entity.",
+      "Compare charger platform ownership, firmware and OCPP support, connector sourcing, enclosure production, test capability and after-sales structure.",
+      "Reject quotations that cannot map the quoted model to the requested power, interface, certification and warranty scope."
+    ],
+    "validation": [
+      "Review datasheets, certification scope, electrical protection, thermal management, connector configuration, communication behavior and sample configuration before pilot approval.",
+      "Record sample deviations against one controlled requirement matrix instead of accepting changes through chat history.",
+      "Define pre-shipment checks for labeling, serial traceability, accessories, firmware/version evidence, packaging and required documents."
+    ],
+    "handover": [
+      "Approved requirement matrix and model-selection record.",
+      "Supplier comparison, compliance-document register and sample approval record.",
+      "Production release checklist, inspection plan, packing requirements and spare-parts list."
+    ]
+  },
+  "07": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Translate drawings into a CTQ list covering material grade, heat treatment, critical dimensions, geometric tolerances, surface finish and cosmetic requirements.",
+      "Define which dimensions require CMM evidence, which can be checked with gauges and which are fit or assembly characteristics.",
+      "Separate prototype pricing from repeat-production pricing and state how fixture, programming and inspection costs are treated."
+    ],
+    "screening": [
+      "Compare machine envelope, spindle and axis capability, material experience, fixture design, CMM access and inspection-document discipline.",
+      "Check whether special processes such as anodizing, plating, passivation or heat treatment are controlled in-house or subcontracted.",
+      "Require sample inspection records that reference the same drawing revision as the quotation."
+    ],
+    "validation": [
+      "Use first-article inspection to close dimensional, material and finish requirements before repeat orders.",
+      "For critical features, retain measurement evidence and identify the measurement method rather than recording pass/fail only.",
+      "Freeze drawing revision, approved deviation list and packaging method before production release."
+    ],
+    "handover": [
+      "Controlled drawing and CTQ register.",
+      "First-article dimensional report and material/process evidence.",
+      "Approved deviation list, packaging standard and repeat-order inspection plan."
+    ]
+  },
+  "13": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Break the BOS package into electrical protection, cables/connectors, enclosures, mounting hardware and project documentation instead of requesting one undifferentiated quote.",
+      "State electrical ratings, environmental conditions, applicable standards, project quantities and required document language for each product family.",
+      "Define substitution rules so suppliers cannot silently change brands, materials or ratings during execution."
+    ],
+    "screening": [
+      "Compare technical ownership, certificate coverage, project references, production lead time and ability to consolidate multiple BOS categories.",
+      "Check consistency between datasheets, certificates and quoted model numbers.",
+      "Identify which components are manufactured by the supplier and which are sourced from approved upstream brands."
+    ],
+    "validation": [
+      "Review electrical ratings, material and environmental specifications against the project BOM before sample or batch release.",
+      "Use document gates for certificates, declarations, drawings, labels and packing lists before shipment.",
+      "For substituted components, require buyer approval before procurement or production."
+    ],
+    "handover": [
+      "Approved BOS cross-reference matrix and model list.",
+      "Certificate/document register and substitution log.",
+      "Consolidation plan, packing list structure and shipment-release checklist."
+    ]
+  },
+  "16": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Define duty point, flow, head, fluid, temperature, material compatibility, seal arrangement, motor efficiency, voltage/frequency and connection requirements.",
+      "Separate hydraulic performance requirements from motor, seal, coating, baseplate and accessory requirements.",
+      "State required test evidence and spare-parts expectations with the RFQ."
+    ],
+    "screening": [
+      "Compare pump-curve capability, casting and machining control, balancing, hydrostatic or performance-test capability, motor sourcing and seal options.",
+      "Check whether quoted pump curves and motor selections correspond to the requested duty point rather than a generic catalog range.",
+      "Review material certificates, test formats and parts traceability for project-critical applications."
+    ],
+    "validation": [
+      "Verify selected operating point, motor margin, materials, seals, coatings and connection dimensions before approval.",
+      "Define production inspection for nameplate data, rotation, leakage, vibration/noise where applicable, accessories and packaging.",
+      "Freeze spare-parts BOM and documentation requirements before shipment."
+    ],
+    "handover": [
+      "Approved pump-selection sheet and performance basis.",
+      "Material, motor and seal configuration record.",
+      "Inspection/test requirements, spare-parts list and shipment documents."
+    ]
+  },
+  "18": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Control vessel material grade, wall thickness, dimensions, nozzle orientation, weld quality, internal finish, drainability and support geometry from an approved drawing.",
+      "Define sanitary finish, passivation, pressure or leak-test requirements and required material/weld documentation where applicable.",
+      "Separate transport-frame and export-packing requirements from the fabrication drawing."
+    ],
+    "screening": [
+      "Assess stainless fabrication capability, welding qualifications, polishing/finishing capability, dimensional control and inspection documentation.",
+      "Review previous vessel work of comparable size and finish without treating unrelated pressure-vessel experience as sufficient evidence.",
+      "Identify subcontracted polishing, passivation or testing processes and how they are controlled."
+    ],
+    "validation": [
+      "Use drawing approval before cutting and fabrication, with nozzle and interface dimensions treated as CTQs.",
+      "Capture weld, finish, dimensional and leak/pressure-test evidence as required by the project.",
+      "Approve protection of finished surfaces, openings and transport supports before packing."
+    ],
+    "handover": [
+      "Approved fabrication drawing and nozzle schedule.",
+      "Material and inspection/test record package appropriate to the project.",
+      "Surface-protection, packing and transport-release checklist."
+    ]
+  },
+  "19": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Define pallet dimensions, load per level, bay geometry, clear heights, aisle assumptions, floor/interface constraints and protection requirements from the warehouse layout.",
+      "Separate structural rack requirements from decking, guards, anchors, signage and installation sequencing.",
+      "Freeze phased delivery requirements so packs arrive in an installation-ready sequence."
+    ],
+    "screening": [
+      "Compare upright and beam section capability, steel grade, roll-forming and welding controls, coating process and engineering documentation.",
+      "Check that quoted configurations are tied to defined loads and geometry rather than generic rack families.",
+      "Review packaging and part-identification methods because missing or mixed hardware creates installation risk even when steelwork is correct."
+    ],
+    "validation": [
+      "Approve layout, elevations, member schedule, hardware and load signage before production.",
+      "Use dimensional, coating, weld and component-count checks appropriate to the rack system.",
+      "Verify pack labels and phased loading plan against the installation sequence."
+    ],
+    "handover": [
+      "Approved warehouse layout, elevations and member schedule.",
+      "Component packing list and hardware schedule.",
+      "Inspection record, phased shipment plan and installation-document package."
+    ]
+  },
+  "21": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Translate room drawings into cabinet module dimensions, material specifications, finish codes, hardware schedule, countertop interfaces and installation tolerances.",
+      "Control exposed finish, edge treatment and hardware brand/model separately from cabinet carcass construction.",
+      "Define room or unit labeling so mixed-project shipments remain installation-ready."
+    ],
+    "screening": [
+      "Compare panel processing, edge banding, drilling, finishing, hardware integration and drawing/BOM control capability.",
+      "Review sample door and carcass workmanship under the actual finish specification rather than accepting catalog images.",
+      "Assess packing and module-identification methods for export damage and site sorting risk."
+    ],
+    "validation": [
+      "Approve shop drawings, finish sample, hardware schedule and critical module dimensions before batch production.",
+      "Use packing mock-up or defined corner/edge protection for vulnerable finished panels.",
+      "Control room/module labels and packing lists so installation teams can identify complete sets."
+    ],
+    "handover": [
+      "Approved shop drawings, finish codes and hardware schedule.",
+      "Sample approval and packaging specification.",
+      "Room/module packing list and installation handover documentation."
+    ]
+  },
+  "25": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Freeze resin grade, color, texture, critical dimensions, cosmetic zones, inserts, assembly interfaces and annual-volume assumptions before tooling quotation.",
+      "Separate mold ownership, cavity count, mold life, maintenance, change costs and sample stages from piece-price comparison.",
+      "Define which appearance defects are unacceptable in A-surfaces and which dimensions are CTQs."
+    ],
+    "screening": [
+      "Compare mold design capability, injection-machine range, resin experience, toolroom ownership, measurement equipment and cosmetic-part discipline.",
+      "Review how the supplier controls resin, masterbatch, regrind, drying, process parameters and mold maintenance.",
+      "Require tooling and production quotations to reference the same drawing and volume assumptions."
+    ],
+    "validation": [
+      "Use structured sample stages to close fit, dimensions, appearance, texture, color and process stability before mass-production release.",
+      "Maintain an approved sample and controlled defect standard for cosmetic surfaces.",
+      "Record approved process/material changes rather than allowing substitutions after sample sign-off."
+    ],
+    "handover": [
+      "Approved drawing, resin/color specification and cosmetic standard.",
+      "Tooling scope/ownership record and approved sample status.",
+      "Mass-production control plan, packaging specification and change-control record."
+    ]
+  },
+  "31": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Define connector manufacturer/part number, wire gauge and insulation, pinout, length tolerances, labels, terminals, overmold or sleeving and electrical-test requirements.",
+      "Control approved component substitutions because connector and terminal look-alikes can create fit, plating and reliability risk.",
+      "State pull-force, continuity, polarity and any insulation or high-voltage test criteria applicable to the harness."
+    ],
+    "screening": [
+      "Compare crimping equipment, applicator control, terminal sourcing, wire processing, test fixtures, traceability and operator inspection methods.",
+      "Check whether key connectors and terminals are authentic specified components or locally substituted equivalents.",
+      "Review crimp-quality evidence and how tooling wear or applicator changes are controlled."
+    ],
+    "validation": [
+      "Approve first samples for pinout, length, labels, connector fit, crimp appearance and electrical continuity.",
+      "For critical terminals, use pull-force or crimp-section evidence as defined by the project.",
+      "Lock BOM and approved substitution list before production."
+    ],
+    "handover": [
+      "Controlled harness drawing, pinout and BOM.",
+      "Approved sample and electrical/mechanical test requirements.",
+      "Production test record format, label/traceability rule and packing specification."
+    ]
+  },
+  "35": {
+    "label": "Hero control plan",
+    "requirements": [
+      "Break the FF&E package into room linen, amenities, tabletop, small appliances and room accessories with an approved room or SKU schedule.",
+      "Define brand, finish, size, packaging and replacement-stock requirements for visually coordinated items.",
+      "Control consolidation deadlines by hotel opening or refurbishment sequence rather than treating each supplier independently."
+    ],
+    "screening": [
+      "Compare suppliers by product-specific capability, consistency, hospitality packaging, export readiness and replenishment ability instead of forcing one supplier to cover every category.",
+      "Check sample appearance, material and finish consistency across items that must coordinate in the same guest room.",
+      "Evaluate carton labeling and consolidation discipline for room-based or department-based receiving."
+    ],
+    "validation": [
+      "Approve representative samples and finish references before purchase release.",
+      "Use SKU, room, quantity and packaging checks during consolidation to prevent incomplete room sets.",
+      "Confirm spare/replacement quantities and final packing lists before shipment."
+    ],
+    "handover": [
+      "Approved FF&E/SKU schedule and sample references.",
+      "Supplier-by-category allocation and consolidation tracker.",
+      "Room/department packing list, replacement-stock record and shipment-release checklist."
+    ]
+  }
+}
