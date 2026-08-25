@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import build_guides_i18n as b
+import seo_audit
 
 b.PRIORITY = list(b.EN.keys())
 
@@ -46,6 +47,7 @@ def main():
             assert f'https://pomerol.in/{code}/resources/guides/{slug}/' in sitemap, (code, slug)
 
     print('Full multilingual guide SEO OK: 40 localized detail pages + 5 hubs + 8 reciprocal hreflang clusters')
+    seo_audit.main()
 
 
 if __name__ == '__main__':
