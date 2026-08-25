@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import json,time,urllib.error,urllib.request,xml.etree.ElementTree as ET
+import json,time,urllib.error,urllib.parse,urllib.request,xml.etree.ElementTree as ET
 
 HOST='pomerol.in'
 BASE='https://pomerol.in'
 KEY='02289c9f560410ae6b1db5dab06ccccc'
 KEY_URL=f'{BASE}/{KEY}.txt'
-ENDPOINTS=['https://api.indexnow.org/indexnow','https://www.bing.com/indexnow']
+BULK_ENDPOINTS=['https://api.indexnow.org/indexnow','https://www.bing.com/indexnow']
+SINGLE_ENDPOINTS=['https://api.indexnow.org/indexnow','https://www.bing.com/indexnow']
 
 def fetch_text(url):
     req=urllib.request.Request(url,headers={'User-Agent':'PomerolSEO/1.0','Cache-Control':'no-cache'})
@@ -33,28 +34,46 @@ def sitemap_urls():
     ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
     return [n.text for n in root.findall('s:url/s:loc',ns) if n.text and n.text.startswith(BASE+'/')]
 
-def submit(endpoint,urls):
-    payload=json.dumps({'host':HOST,'key':KEY,'keyLocation':KEY_URL,'urlList':urls}).encode()
+def bulk_submit(endpoint,urls):
+    # Root-key protocol (IndexNow Option 1): keyLocation is intentionally omitted.
+    payload=json.dumps({'host':HOST,'key':KEY,'urlList':urls}).encode()
     req=urllib.request.Request(endpoint,data=payload,headers={'Content-Type':'application/json; charset=utf-8','User-Agent':'PomerolSEO/1.0'})
     try:
         with urllib.request.urlopen(req,timeout=25) as r:
-            print('IndexNow endpoint:',endpoint,'status:',r.status,'URLs:',len(urls))
+            print('IndexNow bulk endpoint:',endpoint,'status:',r.status,'URLs:',len(urls))
             return 200 <= r.status < 300
     except urllib.error.HTTPError as e:
-        print('IndexNow endpoint:',endpoint,'HTTP:',e.code)
+        print('IndexNow bulk endpoint:',endpoint,'HTTP:',e.code)
         return False
     except Exception as e:
-        print('IndexNow endpoint:',endpoint,'error:',repr(e))
+        print('IndexNow bulk endpoint:',endpoint,'error:',repr(e))
+        return False
+
+def single_submit(endpoint,url):
+    q=urllib.parse.urlencode({'url':url,'key':KEY})
+    req=urllib.request.Request(endpoint+'?'+q,headers={'User-Agent':'PomerolSEO/1.0'})
+    try:
+        with urllib.request.urlopen(req,timeout=25) as r:
+            print('IndexNow single endpoint:',endpoint,'status:',r.status,'URL:',url)
+            return 200 <= r.status < 300
+    except urllib.error.HTTPError as e:
+        print('IndexNow single endpoint:',endpoint,'HTTP:',e.code,'URL:',url)
+        return False
+    except Exception as e:
+        print('IndexNow single endpoint:',endpoint,'error:',repr(e))
         return False
 
 def main():
-    if not wait_for_key():
-        raise SystemExit(2)
+    if not wait_for_key(): raise SystemExit(2)
     urls=sitemap_urls()
     if not urls: raise SystemExit('No sitemap URLs')
-    # IndexNow accepts batches up to protocol limits; this site is currently small enough for one request.
-    for endpoint in ENDPOINTS:
-        if submit(endpoint,urls):
+    for endpoint in BULK_ENDPOINTS:
+        if bulk_submit(endpoint,urls): return
+    # Diagnostic fallback using the simplest protocol form on the highest-value URL.
+    priority=next((u for u in urls if u.endswith('/en/')),urls[0])
+    for endpoint in SINGLE_ENDPOINTS:
+        if single_submit(endpoint,priority):
+            print('Bulk submission rejected, but root-key single URL submission works.')
             return
     raise SystemExit(3)
 
