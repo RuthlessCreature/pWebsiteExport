@@ -1,1 +1,0 @@
-SEO build helpers for the static Cloudflare site. `build_guides_i18n_full.py` is the final integration stage and runs multilingual guide generation, HTML sitemap generation, crawl smoke checks, XML sitemap rebuild, and technical SEO audit.
