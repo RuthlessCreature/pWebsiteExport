@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -57,13 +57,14 @@ jobs:
               -e 's/8613923387986/8613242694270/g' "$f"
           done < <(find public -type f \( -name '*.html' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' \) -print0)
 
-      - name: Build SEO pages and metadata
+      - name: Build SEO pages, knowledge center and metadata
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py scripts/seo_enhance.py
+          python -m py_compile scripts/build_seo.py scripts/seo_enhance.py scripts/build_guides.py scripts/notify_indexnow.py
           python scripts/build_seo.py
           python scripts/seo_enhance.py
+          python scripts/build_guides.py
 
       - name: Validate static site, case library and SEO gates
         shell: bash
@@ -82,17 +83,24 @@ jobs:
           node -e "global.window={}; require('./public/assets/cases-part-1.js'); require('./public/assets/cases-part-2.js'); require('./public/assets/cases-part-3.js'); require('./public/assets/cases-part-4.js'); if (!window.CASE_LIBRARY || window.CASE_LIBRARY.length !== 36) throw new Error('Expected 36 cases, got '+(window.CASE_LIBRARY&&window.CASE_LIBRARY.length)); console.log('Case library OK: '+window.CASE_LIBRARY.length);"
           test "$(find public/case-studies -mindepth 2 -maxdepth 2 -name index.html | wc -l)" -eq 36
           python -c "import json,pathlib; a=json.load(open('scripts/seo_pages_core.json')); b=json.load(open('scripts/seo_pages_industries.json')); assert len(a)+len(b)==14; assert all((pathlib.Path('public')/x['slug']/'index.html').is_file() for x in a+b); print('SEO landing pages OK: 14')"
+          python -c "import json,pathlib; g=json.load(open('scripts/seo_guides.json')); assert len(g)==8; assert pathlib.Path('public/resources/guides/index.html').is_file(); assert all((pathlib.Path('public/resources/guides')/x['slug']/'index.html').is_file() for x in g); print('Buyer guides OK: 8 + hub')"
           grep -q 'rel="canonical" href="https://pomerol.in/en/"' public/en/index.html
           grep -q 'hreflang="ja"' public/en/index.html
           grep -q 'hreflang="x-default"' public/en/index.html
           grep -q 'application/ld+json' public/en/index.html
           grep -q '"@type":"Service"' public/china-sourcing-agent/index.html
           grep -Rql '"@type":"Article"' public/case-studies
+          grep -q '"@type":"Article"' public/resources/guides/how-to-source-products-from-china/index.html
           grep -q 'data-seo-service-directory' public/services/index.html
+          grep -q 'data-buyer-guides' public/resources/index.html
+          grep -q '/resources/guides/' public/en/index.html
           grep -q '/china-sourcing-agent/' public/en/index.html
-          grep -q 'https://pomerol.in/' public/sitemap.xml
+          grep -q 'https://pomerol.in/resources/guides/how-to-source-products-from-china/' public/sitemap.xml
           grep -q 'xmlns:image=' public/sitemap.xml
+          ! grep -q '<lastmod>' public/sitemap.xml
+          ! grep -RniE 'datePublished|dateModified' public --include='*.html'
           test -s public/llms.txt
+          grep -q 'https://pomerol.in/resources/guides/' public/llms.txt
           test "$(cat public/02289c9f560410ae6b1db5dab06ccccc.txt)" = '02289c9f560410ae6b1db5dab06ccccc'
           python -c "from pathlib import Path; import re; root=Path('public'); m=[(str(h),r) for h in root.rglob('*.html') for r in re.findall(r'(?:src|href)=\"(/[^\"]+)\"',h.read_text(encoding='utf-8')) if (r.startswith('/assets/') or r.startswith('/resources/')) and not (root/r.lstrip('/')).exists()]; print('Local asset references OK' if not m else m[:20]); raise SystemExit(1 if m else 0)"
 
@@ -105,24 +113,11 @@ jobs:
           wranglerVersion: "4.102.0"
           command: deploy
 
-      - name: Notify IndexNow
+      - name: Verify and notify IndexNow
         if: steps.deploy.outcome == 'success'
         continue-on-error: true
         shell: bash
-        run: |
-          python - <<'PY'
-          import json, urllib.request, xml.etree.ElementTree as ET
-          key='02289c9f560410ae6b1db5dab06ccccc'
-          root=ET.parse('public/sitemap.xml').getroot()
-          ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
-          urls=[n.text for n in root.findall('s:url/s:loc',ns) if n.text]
-          payload=json.dumps({'host':'pomerol.in','key':key,'keyLocation':f'https://pomerol.in/{key}.txt','urlList':urls}).encode()
-          req=urllib.request.Request('https://api.indexnow.org/indexnow',data=payload,headers={'Content-Type':'application/json; charset=utf-8'})
-          try:
-              with urllib.request.urlopen(req,timeout=20) as r: print('IndexNow status:',r.status,'URLs:',len(urls))
-          except Exception as e:
-              print('IndexNow warning:',e)
-          PY
+        run: python scripts/notify_indexnow.py
 
       - name: Report deployment status
         if: always()
