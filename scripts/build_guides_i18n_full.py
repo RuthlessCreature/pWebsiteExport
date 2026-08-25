@@ -2,6 +2,7 @@
 from pathlib import Path
 import build_guides_i18n as b
 import build_html_sitemap
+import html_sitemap_smoke
 import seo_audit
 
 b.PRIORITY = list(b.EN.keys())
@@ -56,6 +57,7 @@ def main():
     assert 'data-html-sitemap-link' in (b.PUBLIC / 'resources' / 'index.html').read_text(encoding='utf-8')
 
     print('Full multilingual guide SEO OK: 40 localized detail pages + 5 hubs + 8 reciprocal hreflang clusters')
+    html_sitemap_smoke.main()
     seo_audit.main()
 
 
