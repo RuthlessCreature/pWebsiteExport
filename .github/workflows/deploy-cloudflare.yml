@@ -57,14 +57,15 @@ jobs:
               -e 's/8613923387986/8613242694270/g' "$f"
           done < <(find public -type f \( -name '*.html' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' \) -print0)
 
-      - name: Build SEO pages, knowledge center and metadata
+      - name: Build SEO pages, multilingual knowledge center and metadata
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py scripts/seo_enhance.py scripts/build_guides.py scripts/notify_indexnow.py
+          python -m py_compile scripts/build_seo.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/notify_indexnow.py
           python scripts/build_seo.py
           python scripts/seo_enhance.py
           python scripts/build_guides.py
+          python scripts/build_guides_i18n.py
 
       - name: Validate static site, case library and SEO gates
         shell: bash
@@ -83,7 +84,8 @@ jobs:
           node -e "global.window={}; require('./public/assets/cases-part-1.js'); require('./public/assets/cases-part-2.js'); require('./public/assets/cases-part-3.js'); require('./public/assets/cases-part-4.js'); if (!window.CASE_LIBRARY || window.CASE_LIBRARY.length !== 36) throw new Error('Expected 36 cases, got '+(window.CASE_LIBRARY&&window.CASE_LIBRARY.length)); console.log('Case library OK: '+window.CASE_LIBRARY.length);"
           test "$(find public/case-studies -mindepth 2 -maxdepth 2 -name index.html | wc -l)" -eq 36
           python -c "import json,pathlib; a=json.load(open('scripts/seo_pages_core.json')); b=json.load(open('scripts/seo_pages_industries.json')); assert len(a)+len(b)==14; assert all((pathlib.Path('public')/x['slug']/'index.html').is_file() for x in a+b); print('SEO landing pages OK: 14')"
-          python -c "import json,pathlib; g=json.load(open('scripts/seo_guides.json')); assert len(g)==8; assert pathlib.Path('public/resources/guides/index.html').is_file(); assert all((pathlib.Path('public/resources/guides')/x['slug']/'index.html').is_file() for x in g); print('Buyer guides OK: 8 + hub')"
+          python -c "import json,pathlib; g=json.load(open('scripts/seo_guides.json')); assert len(g)==8; assert pathlib.Path('public/resources/guides/index.html').is_file(); assert all((pathlib.Path('public/resources/guides')/x['slug']/'index.html').is_file() for x in g); print('English buyer guides OK: 8 + hub')"
+          python -c "from pathlib import Path; codes=['zh','ja','ru','es','pt']; slugs=['how-to-source-products-from-china','china-supplier-verification-checklist','china-rfq-template-guide','china-pre-shipment-inspection-guide']; assert all((Path('public')/c/'resources/guides/index.html').is_file() for c in codes); assert sum(1 for c in codes for s in slugs if (Path('public')/c/'resources/guides'/s/'index.html').is_file())==20; print('Localized buyer guides OK: 20 + 5 hubs')"
           grep -q 'rel="canonical" href="https://pomerol.in/en/"' public/en/index.html
           grep -q 'hreflang="ja"' public/en/index.html
           grep -q 'hreflang="x-default"' public/en/index.html
@@ -91,11 +93,19 @@ jobs:
           grep -q '"@type":"Service"' public/china-sourcing-agent/index.html
           grep -Rql '"@type":"Article"' public/case-studies
           grep -q '"@type":"Article"' public/resources/guides/how-to-source-products-from-china/index.html
+          for code in zh ja ru es pt; do
+            grep -q '"@type":"Article"' "public/$code/resources/guides/how-to-source-products-from-china/index.html"
+            grep -q 'hreflang="en"' "public/$code/resources/guides/how-to-source-products-from-china/index.html"
+            grep -q 'hreflang="x-default"' "public/$code/resources/guides/how-to-source-products-from-china/index.html"
+            grep -q "/$code/resources/guides/" "public/$code/index.html"
+          done
+          for lang in zh-CN ja ru es pt x-default; do grep -q "hreflang=\"$lang\"" public/resources/guides/how-to-source-products-from-china/index.html; done
           grep -q 'data-seo-service-directory' public/services/index.html
           grep -q 'data-buyer-guides' public/resources/index.html
           grep -q '/resources/guides/' public/en/index.html
           grep -q '/china-sourcing-agent/' public/en/index.html
-          grep -q 'https://pomerol.in/resources/guides/how-to-source-products-from-china/' public/sitemap.xml
+          grep -q 'https://pomerol.in/zh/resources/guides/how-to-source-products-from-china/' public/sitemap.xml
+          grep -q 'https://pomerol.in/pt/resources/guides/china-pre-shipment-inspection-guide/' public/sitemap.xml
           grep -q 'xmlns:image=' public/sitemap.xml
           ! grep -q '<lastmod>' public/sitemap.xml
           ! grep -RniE 'datePublished|dateModified' public --include='*.html'
