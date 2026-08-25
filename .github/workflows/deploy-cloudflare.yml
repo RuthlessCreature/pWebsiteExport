@@ -57,12 +57,20 @@ jobs:
               -e 's/8613923387986/8613242694270/g' "$f"
           done < <(find public -type f \( -name '*.html' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' \) -print0)
 
-      - name: Validate static site and case library
+      - name: Build SEO pages and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/build_seo.py
+          python scripts/build_seo.py
+
+      - name: Validate static site, case library and SEO gates
         shell: bash
         run: |
           set -euo pipefail
           ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
           ! grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|8613923387986' public --include='*.html' --include='*.js'
+          ! grep -Rni 'pwebsite-export\.nostalgia-ho\.workers\.dev' public --include='*.html' --include='*.xml' --include='*.txt'
           for f in public/en/index.html public/zh/index.html public/ja/index.html public/ru/index.html public/es/index.html public/pt/index.html public/ja/cases/index.html public/ru/cases/index.html public/es/cases/index.html public/pt/cases/index.html; do test -s "$f"; done
           node --check public/assets/site.js
           node --check public/assets/cases-part-1.js
@@ -71,6 +79,16 @@ jobs:
           node --check public/assets/cases-part-4.js
           node --check public/assets/cases-render.js
           node -e "global.window={}; require('./public/assets/cases-part-1.js'); require('./public/assets/cases-part-2.js'); require('./public/assets/cases-part-3.js'); require('./public/assets/cases-part-4.js'); if (!window.CASE_LIBRARY || window.CASE_LIBRARY.length !== 36) throw new Error('Expected 36 cases, got '+(window.CASE_LIBRARY&&window.CASE_LIBRARY.length)); console.log('Case library OK: '+window.CASE_LIBRARY.length);"
+          test "$(find public/case-studies -mindepth 2 -maxdepth 2 -name index.html | wc -l)" -eq 36
+          python -c "import json,pathlib; a=json.load(open('scripts/seo_pages_core.json')); b=json.load(open('scripts/seo_pages_industries.json')); assert len(a)+len(b)==14; assert all((pathlib.Path('public')/x['slug']/'index.html').is_file() for x in a+b); print('SEO landing pages OK: 14')"
+          grep -q 'rel="canonical" href="https://pomerol.in/en/"' public/en/index.html
+          grep -q 'hreflang="ja"' public/en/index.html
+          grep -q 'hreflang="x-default"' public/en/index.html
+          grep -q 'application/ld+json' public/en/index.html
+          grep -q 'https://pomerol.in/' public/sitemap.xml
+          grep -q 'xmlns:image=' public/sitemap.xml
+          test -s public/llms.txt
+          test "$(cat public/02289c9f560410ae6b1db5dab06ccccc.txt)" = '02289c9f560410ae6b1db5dab06ccccc'
           python -c "from pathlib import Path; import re; root=Path('public'); m=[(str(h),r) for h in root.rglob('*.html') for r in re.findall(r'(?:src|href)=\"(/[^\"]+)\"',h.read_text(encoding='utf-8')) if (r.startswith('/assets/') or r.startswith('/resources/')) and not (root/r.lstrip('/')).exists()]; print('Local asset references OK' if not m else m[:20]); raise SystemExit(1 if m else 0)"
 
       - name: Deploy Worker
@@ -81,6 +99,25 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4.102.0"
           command: deploy
+
+      - name: Notify IndexNow
+        if: steps.deploy.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, urllib.request, xml.etree.ElementTree as ET
+          key='02289c9f560410ae6b1db5dab06ccccc'
+          root=ET.parse('public/sitemap.xml').getroot()
+          ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          urls=[n.text for n in root.findall('s:url/s:loc',ns) if n.text]
+          payload=json.dumps({'host':'pomerol.in','key':key,'keyLocation':f'https://pomerol.in/{key}.txt','urlList':urls}).encode()
+          req=urllib.request.Request('https://api.indexnow.org/indexnow',data=payload,headers={'Content-Type':'application/json; charset=utf-8'})
+          try:
+              with urllib.request.urlopen(req,timeout=20) as r: print('IndexNow status:',r.status,'URLs:',len(urls))
+          except Exception as e:
+              print('IndexNow warning:',e)
+          PY
 
       - name: Report deployment status
         if: always()
