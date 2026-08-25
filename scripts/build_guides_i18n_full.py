@@ -3,6 +3,7 @@ from pathlib import Path
 import build_guides_i18n as b
 import build_html_sitemap
 import html_sitemap_smoke
+import patch_global_sitemap_link
 import seo_audit
 
 b.PRIORITY = list(b.EN.keys())
@@ -14,6 +15,7 @@ def main():
     b.patch_english_hreflang()
     b.patch_local_homes()
     build_html_sitemap.main()
+    patch_global_sitemap_link.main()
     b.rebuild_sitemap()
 
     localized = []
@@ -56,7 +58,11 @@ def main():
     assert st.count('data-sitemap-link') >= 120, st.count('data-sitemap-link')
     assert 'data-html-sitemap-link' in (b.PUBLIC / 'resources' / 'index.html').read_text(encoding='utf-8')
 
+    footer_links = sum(1 for p in b.PUBLIC.rglob('*.html') if 'data-site-directory-link' in p.read_text(encoding='utf-8'))
+    assert footer_links >= 120, footer_links
+
     print('Full multilingual guide SEO OK: 40 localized detail pages + 5 hubs + 8 reciprocal hreflang clusters')
+    print(f'Global sitemap footer discovery OK: {footer_links} HTML pages link to /sitemap/')
     html_sitemap_smoke.main()
     seo_audit.main()
 
