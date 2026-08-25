@@ -1,0 +1,20 @@
+Cost component,Currency,Unit cost,Quantity,Total,Included in supplier quote,Notes
+Product price,,,,,,EXW or FOB basis
+Tooling amortization,,,,,,Allocate tooling across expected volume if applicable
+Custom packaging,,,,,,Boxes inserts printing labels
+Domestic China freight,,,,,,Factory to consolidation warehouse or port
+Consolidation handling,,,,,,Multi-supplier receiving sorting and palletizing
+Inspection cost,,,,,,Factory audit sample inspection or pre-shipment inspection
+Export documentation,,,,,,Customs declaration certificates and document handling
+Origin charges,,,,,,Port terminal documentation and local charges
+International freight,,,,,,Sea air rail or courier
+Cargo insurance,,,,,,If purchased separately
+Import duty,,,,,,Apply destination HS-code duty rate
+Import VAT or sales tax,,,,,,Destination-country treatment
+Customs broker,,,,,,Brokerage and clearance fees
+Destination port charges,,,,,,Terminal storage handling or inspection
+Final-mile delivery,,,,,,Port or airport to warehouse
+Bank and payment fees,,,,,,Transfer LC or payment-platform costs
+Contingency,,,,,,Optional risk allowance
+TOTAL LANDED COST,,,,,,Sum all applicable components
+LANDED COST PER UNIT,,,,,,Total landed cost divided by sellable units
