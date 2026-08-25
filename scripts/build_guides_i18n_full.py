@@ -6,6 +6,7 @@ import build_html_sitemap
 import html_sitemap_smoke
 import notify_indexnow
 import patch_global_sitemap_link
+import patch_static_stylesheets
 import seo_audit
 
 b.PRIORITY = list(b.EN.keys())
@@ -19,6 +20,7 @@ def main():
     build_html_sitemap.main()
     patch_global_sitemap_link.main()
     b.rebuild_sitemap()
+    patch_static_stylesheets.main()
     add_image_dimensions.main()
 
     localized = []

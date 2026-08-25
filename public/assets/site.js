@@ -1,5 +1,3 @@
-(()=>{for(const href of ['/assets/photo-cases.css','/assets/locale.css']){if(!document.querySelector(`link[href="${href}"]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l);}}})();
-
 const CONTACT={name:'Yusuf',email:'abd.yusuf.ibrahim.mustafa@gmail.com',phoneDisplay:'+86 132 4269 4270',phone:'+8613242694270'};
 
 (()=>{
