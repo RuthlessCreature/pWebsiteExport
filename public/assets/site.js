@@ -10,4 +10,35 @@ const CONTACT={name:'Yusuf',email:'abd.yusuf.ibrahim.mustafa@gmail.com',phoneDis
 })();
 
 const menuButton=document.querySelector('[data-menu]');const nav=document.querySelector('[data-nav]');if(menuButton&&nav){menuButton.addEventListener('click',()=>nav.classList.toggle('open'));}
-const inquiry=document.querySelector('[data-inquiry-form]');if(inquiry){inquiry.addEventListener('submit',(e)=>{e.preventDefault();const data=new FormData(inquiry);const lines=['Hello Pomerol International,','',`Name: ${data.get('name')||''}`,`Company: ${data.get('company')||''}`,`Email: ${data.get('email')||''}`,`Country/Market: ${data.get('market')||''}`,`Product / Category: ${data.get('product')||''}`,`Estimated quantity: ${data.get('quantity')||''}`,`Target timing: ${data.get('timing')||''}`,'',String(data.get('message')||'')];const subject=encodeURIComponent(`Sourcing inquiry — ${data.get('product')||data.get('company')||'new project'}`);const body=encodeURIComponent(lines.join('\n'));window.location.href=`mailto:${CONTACT.email}?subject=${subject}&body=${body}`;});}
+
+function trackEvent(event,target=''){
+  const payload=JSON.stringify({event,page:location.pathname,target,language:document.documentElement.lang||''});
+  try{
+    if(navigator.sendBeacon){const blob=new Blob([payload],{type:'application/json'});if(navigator.sendBeacon('/api/event',blob))return;}
+    fetch('/api/event',{method:'POST',headers:{'content-type':'application/json'},body:payload,keepalive:true,credentials:'same-origin'}).catch(()=>{});
+  }catch(_e){}
+}
+
+document.addEventListener('click',(e)=>{
+  const a=e.target.closest&&e.target.closest('a');if(!a)return;
+  const href=a.getAttribute('href')||'';
+  if(href.startsWith('https://wa.me/'))trackEvent('whatsapp_click','whatsapp');
+  else if(href.startsWith('mailto:'))trackEvent('email_click','email');
+  else if(href.startsWith('tel:'))trackEvent('phone_click','phone');
+  else if(/^\/resources\/.*\.(?:csv|xlsx|pdf)(?:$|\?)/i.test(href))trackEvent('resource_download',href.split('?')[0]);
+  else if(href==='/contact/'||href.startsWith('/contact/?'))trackEvent('contact_click','/contact/');
+},true);
+
+const inquiry=document.querySelector('[data-inquiry-form]');
+if(inquiry){
+  trackEvent('rfq_open','contact-form');
+  inquiry.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const data=new FormData(inquiry);
+    trackEvent('rfq_mailto_submit','contact-form');
+    const lines=['Hello Pomerol International,','',`Name: ${data.get('name')||''}`,`Company: ${data.get('company')||''}`,`Email: ${data.get('email')||''}`,`Country/Market: ${data.get('market')||''}`,`Product / Category: ${data.get('product')||''}`,`Estimated quantity: ${data.get('quantity')||''}`,`Target timing: ${data.get('timing')||''}`,'',String(data.get('message')||'')];
+    const subject=encodeURIComponent(`Sourcing inquiry — ${data.get('product')||data.get('company')||'new project'}`);
+    const body=encodeURIComponent(lines.join('\n'));
+    window.location.href=`mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
+  });
+}
