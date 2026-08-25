@@ -44,25 +44,23 @@ jobs:
           curl -fL --retry 3 'https://images.pexels.com/photos/14805031/pexels-photo-14805031.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/woodworking.jpg
           test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 15
 
-      - name: Normalize public contact identity
+      - name: Validate public source contact identity
         shell: bash
         run: |
           set -euo pipefail
-          while IFS= read -r -d '' f; do
-            sed -i \
-              -e 's/Nicole/Yusuf/g' \
-              -e 's/13923387986@163.com/abd.yusuf.ibrahim.mustafa@gmail.com/g' \
-              -e 's/+86 139 2338 7986/+86 132 4269 4270/g' \
-              -e 's/+8613923387986/+8613242694270/g' \
-              -e 's/8613923387986/8613242694270/g' "$f"
-          done < <(find public -type f \( -name '*.html' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' \) -print0)
+          if grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|13923387986|8613923387986' public --include='*.html' --include='*.js' --include='*.xml' --include='*.txt'; then
+            echo 'Legacy contact identity remains in public source. Fix the source file instead of rewriting it during CI.' >&2
+            exit 1
+          fi
+          grep -Rql 'abd.yusuf.ibrahim.mustafa@gmail.com' public --include='*.html' --include='*.js'
+          grep -Rql '132 4269 4270' public --include='*.html' --include='*.js'
 
       - name: Build SEO pages, multilingual knowledge center and metadata
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/notify_indexnow.py
-          python scripts/build_seo.py
+          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/seo_audit.py scripts/notify_indexnow.py
+          python scripts/build_seo_clean.py
           python scripts/seo_enhance.py
           python scripts/build_guides.py
           python scripts/build_guides_i18n_full.py
@@ -72,7 +70,7 @@ jobs:
         run: |
           set -euo pipefail
           ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
-          ! grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|8613923387986' public --include='*.html' --include='*.js'
+          ! grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|13923387986|8613923387986' public --include='*.html' --include='*.js'
           ! grep -Rni 'pwebsite-export\.nostalgia-ho\.workers\.dev' public --include='*.html' --include='*.xml' --include='*.txt'
           for f in public/en/index.html public/zh/index.html public/ja/index.html public/ru/index.html public/es/index.html public/pt/index.html public/ja/cases/index.html public/ru/cases/index.html public/es/cases/index.html public/pt/cases/index.html; do test -s "$f"; done
           node --check public/assets/site.js
@@ -84,7 +82,7 @@ jobs:
           node -e "global.window={}; require('./public/assets/cases-part-1.js'); require('./public/assets/cases-part-2.js'); require('./public/assets/cases-part-3.js'); require('./public/assets/cases-part-4.js'); if (!window.CASE_LIBRARY || window.CASE_LIBRARY.length !== 36) throw new Error('Expected 36 cases, got '+(window.CASE_LIBRARY&&window.CASE_LIBRARY.length)); console.log('Case library OK: '+window.CASE_LIBRARY.length);"
           test "$(find public/case-studies -mindepth 2 -maxdepth 2 -name index.html | wc -l)" -eq 36
           python -c "import json,pathlib; a=json.load(open('scripts/seo_pages_core.json')); b=json.load(open('scripts/seo_pages_industries.json')); assert len(a)+len(b)==14; assert all((pathlib.Path('public')/x['slug']/'index.html').is_file() for x in a+b); print('SEO landing pages OK: 14')"
-          python -c "import json,pathlib; g=json.load(open('scripts/seo_guides.json')); assert len(g)==8; assert pathlib.Path('public/resources/guides/index.html').is_file(); assert all((pathlib.Path('public/resources/guides')/x['slug']/'index.html').is_file() for x in g); print('English buyer guides OK: 8 + hub')"
+          python -c "import json,pathlib; g=json.load(open('scripts/seo_guides.json')); assert len(g)==8; assert pathlib.Path('public/resources/guides/index.html').is_file(); assert all((pathlib.Path('public')/x['slug']/'index.html').is_file() for x in []); assert all((pathlib.Path('public/resources/guides')/x['slug']/'index.html').is_file() for x in g); print('English buyer guides OK: 8 + hub')"
           python -c "import json; from pathlib import Path; codes=['zh','ja','ru','es','pt']; slugs=[x['slug'] for x in json.load(open('scripts/seo_guides.json'))]; assert all((Path('public')/c/'resources/guides/index.html').is_file() for c in codes); assert sum(1 for c in codes for s in slugs if (Path('public')/c/'resources/guides'/s/'index.html').is_file())==40; print('Localized buyer guides OK: 40 + 5 hubs')"
           grep -q 'rel="canonical" href="https://pomerol.in/en/"' public/en/index.html
           grep -q 'hreflang="ja"' public/en/index.html
