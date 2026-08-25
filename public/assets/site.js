@@ -1,11 +1,29 @@
 const CONTACT={name:'Yusuf',email:'abd.yusuf.ibrahim.mustafa@gmail.com',phoneDisplay:'+86 132 4269 4270',phone:'+8613242694270'};
+const SITE_LOCALES=['zh','ja','ru','es','pt'];
+
+function localizedEquivalent(path,code){
+  const m=path.match(/^\/(zh|ja|ru|es|pt)(\/.*|\/$)/);let base=m?(m[2]||'/'):path;
+  if(base==='/en/'||base==='/')base='/';
+  const deep=new Set(['/services/','/about/','/resources/','/contact/','/cases/']);
+  const guide=base.match(/^\/resources\/guides\/(.*)$/);
+  if(code==='en'){
+    if(base==='/')return '/en/';
+    if(deep.has(base)||guide)return base;
+    return '/en/';
+  }
+  if(base==='/')return `/${code}/`;
+  if(deep.has(base))return `/${code}${base}`;
+  if(guide)return `/${code}${base}`;
+  return `/${code}/`;
+}
 
 (()=>{
   const nav=document.querySelector('[data-nav]');
   if(!nav) return;
   [...nav.querySelectorAll('a')].forEach(a=>{const h=a.getAttribute('href')||'';if(['/zh/','/en/','/ja/','/ru/','/es/','/pt/'].includes(h)&&!a.classList.contains('nav-cta'))a.remove();});
   const path=location.pathname;let active='EN';if(path.startsWith('/zh/'))active='中文';else if(path.startsWith('/ja/'))active='日本語';else if(path.startsWith('/ru/'))active='RU';else if(path.startsWith('/es/'))active='ES';else if(path.startsWith('/pt/'))active='PT';
-  const lang=document.createElement('details');lang.className='lang-menu';lang.innerHTML=`<summary>${active}</summary><div class="lang-popover"><a href="/zh/">中文</a><a href="/en/">English</a><a href="/ja/">日本語</a><a href="/ru/">Русский</a><a href="/es/">Español</a><a href="/pt/">Português</a></div>`;
+  const lang=document.createElement('details');lang.className='lang-menu';
+  lang.innerHTML=`<summary>${active}</summary><div class="lang-popover"><a href="${localizedEquivalent(path,'zh')}">中文</a><a href="${localizedEquivalent(path,'en')}">English</a><a href="${localizedEquivalent(path,'ja')}">日本語</a><a href="${localizedEquivalent(path,'ru')}">Русский</a><a href="${localizedEquivalent(path,'es')}">Español</a><a href="${localizedEquivalent(path,'pt')}">Português</a></div>`;
   const cta=nav.querySelector('.nav-cta');nav.insertBefore(lang,cta||null);
 })();
 
@@ -26,7 +44,7 @@ document.addEventListener('click',(e)=>{
   else if(href.startsWith('mailto:'))trackEvent('email_click','email');
   else if(href.startsWith('tel:'))trackEvent('phone_click','phone');
   else if(/^\/resources\/.*\.(?:csv|xlsx|pdf)(?:$|\?)/i.test(href))trackEvent('resource_download',href.split('?')[0]);
-  else if(href==='/contact/'||href.startsWith('/contact/?'))trackEvent('contact_click','/contact/');
+  else if(/^\/(?:(?:zh|ja|ru|es|pt)\/)?contact\//.test(href))trackEvent('contact_click',href.split('?')[0]);
 },true);
 
 const inquiry=document.querySelector('[data-inquiry-form]');
