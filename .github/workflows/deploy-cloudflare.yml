@@ -92,7 +92,10 @@ jobs:
           script: |
             const success = process.env.DEPLOY_OUTCOME === 'success';
             const rawUrl = (process.env.DEPLOYMENT_URL || '').trim();
-            const deploymentUrl = rawUrl ? rawUrl.split(/\s+/)[0] : '';
+            const deploymentHost = rawUrl ? rawUrl.split(/\s+/)[0] : '';
+            const deploymentUrl = deploymentHost && !/^https?:\/\//i.test(deploymentHost)
+              ? `https://${deploymentHost}`
+              : deploymentHost;
             const actionsUrl = context.serverUrl + '/' + context.repo.owner + '/' + context.repo.repo + '/actions/runs/' + context.runId;
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
