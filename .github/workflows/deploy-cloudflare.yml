@@ -61,8 +61,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py
+          python -m py_compile scripts/build_seo.py scripts/seo_enhance.py
           python scripts/build_seo.py
+          python scripts/seo_enhance.py
 
       - name: Validate static site, case library and SEO gates
         shell: bash
@@ -85,6 +86,10 @@ jobs:
           grep -q 'hreflang="ja"' public/en/index.html
           grep -q 'hreflang="x-default"' public/en/index.html
           grep -q 'application/ld+json' public/en/index.html
+          grep -q '"@type":"Service"' public/china-sourcing-agent/index.html
+          grep -Rql '"@type":"Article"' public/case-studies
+          grep -q 'data-seo-service-directory' public/services/index.html
+          grep -q '/china-sourcing-agent/' public/en/index.html
           grep -q 'https://pomerol.in/' public/sitemap.xml
           grep -q 'xmlns:image=' public/sitemap.xml
           test -s public/llms.txt
