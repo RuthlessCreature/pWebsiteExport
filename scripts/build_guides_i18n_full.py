@@ -6,6 +6,7 @@ import build_html_sitemap
 import html_sitemap_smoke
 import notify_indexnow
 import patch_global_sitemap_link
+import patch_image_loading
 import patch_static_stylesheets
 import seo_audit
 
@@ -21,6 +22,7 @@ def main():
     patch_global_sitemap_link.main()
     b.rebuild_sitemap()
     patch_static_stylesheets.main()
+    patch_image_loading.main()
     add_image_dimensions.main()
 
     localized = []
