@@ -137,7 +137,44 @@ def misc_files(cases,solutions):
         loc=canonical(p); im=image_for(p.read_text(encoding='utf-8')); urls.append((loc,im if '/assets/photos/' in im else None))
     ns='xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'; x=[f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset {ns}>']
     for loc,im in urls: x.append(f'<url><loc>{esc(loc)}</loc><lastmod>{TODAY}</lastmod>'+(f'<image:image><image:loc>{esc(im)}</image:loc></image:image>' if im else '')+'</url>')
-    x.append('</urlset>'); (PUBLIC/'sitemap.xml').write_text('\n'.join(x),encoding='utf-8'); (PUBLIC/'robots.txt').write_text(f'User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n',encoding='utf-8')
+    x.append('</urlset>'); (PUBLIC/'sitemap.xml').write_text('\n'.join(x),encoding='utf-8')
+    robots = f'''User-agent: *
+Allow: /
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /api/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /api/
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /api/
+
+Sitemap: {BASE}/sitemap.xml
+'''
+    (PUBLIC/'robots.txt').write_text(robots,encoding='utf-8')
 
 def main():
     cases=load_cases(); solutions=load_solutions()
@@ -150,3 +187,4 @@ def main():
         if p.name!='404.html' and 'rel="canonical"' not in p.read_text(encoding='utf-8'): raise SystemExit(f'missing canonical: {p}')
     print(f'SEO build OK: {len(list(PUBLIC.rglob("*.html")))} HTML, 36 case pages, 14 solution pages')
 if __name__=='__main__': main()
+
