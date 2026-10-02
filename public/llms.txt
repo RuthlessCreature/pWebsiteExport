@@ -3,6 +3,9 @@
 > China sourcing, procurement, OEM/ODM, supplier control, quality inspection, consolidation and export coordination from Zhuhai, Guangdong, China.
 
 Contact: Yusuf — abd.yusuf.ibrahim.mustafa@gmail.com — +86 132 4269 4270
+Contact page: https://pomerol.trade/contact/
+Chinese contact page: https://pomerol.trade/zh/contact/
+XML sitemap: https://pomerol.trade/sitemap.xml
 
 ## Core service pages
 - [China Sourcing Agent for Overseas Buyers](https://pomerol.trade/china-sourcing-agent/): China sourcing agent in Zhuhai helping overseas buyers find suppliers, normalize RFQs, coordinate samples, control quality, consolidate goods and prepare export delivery.
@@ -68,3 +71,4 @@ Contact: Yusuf — abd.yusuf.ibrahim.mustafa@gmail.com — +86 132 4269 4270
 - https://pomerol.trade/resources/guides/consolidate-shipments-from-china/ — How to Consolidate Shipments from Multiple Chinese Suppliers
 - https://pomerol.trade/resources/guides/oem-vs-odm-china-guide/ — OEM vs ODM in China: Choosing the Right Manufacturing Route
 - https://pomerol.trade/resources/guides/china-sourcing-cost-breakdown/ — China Sourcing Cost Breakdown: Compare More Than Unit Price
+
