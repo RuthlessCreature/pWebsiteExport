@@ -8,6 +8,10 @@
     {
       "pattern": "pomerol.trade/*",
       "zone_name": "pomerol.trade"
+    },
+    {
+      "pattern": "www.pomerol.trade",
+      "custom_domain": true
     }
   ],
   "assets": {
@@ -33,4 +37,3 @@
     "enabled": true
   }
 }
-
