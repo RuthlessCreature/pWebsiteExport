@@ -94,6 +94,10 @@ function sameSiteRequest(request, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.hostname === 'www.pomerol.trade') {
+      url.hostname = 'pomerol.trade';
+      return Response.redirect(url.toString(), 308);
+    }
 
     if (url.pathname === '/api/inquiry') return handleInquiry(request, env, url);
 
