@@ -2,12 +2,12 @@
 from __future__ import annotations
 import json,time,urllib.error,urllib.parse,urllib.request,xml.etree.ElementTree as ET
 
-HOST='pomerol.in'
-BASE='https://pomerol.in'
+HOST='pomerol.trade'
+BASE='https://pomerol.trade'
 KEY='6ef27e4a81efe1ff6c679ee852d012f2'
 KEY_URL=f'{BASE}/{KEY}.txt'
 ENDPOINTS=['https://api.indexnow.org/indexnow','https://www.bing.com/indexnow']
-UA='PomerolInternational-IndexNow/2.0 (+https://pomerol.in/)'
+UA='PomerolInternational-IndexNow/2.0 (+https://pomerol.trade/)'
 
 
 def fetch_text(url):

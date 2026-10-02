@@ -6,7 +6,7 @@ from xml.sax.saxutils import escape as xml_escape
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'
-BASE='https://pomerol.in'
+BASE='https://pomerol.trade'
 ORG_ID=BASE+'/#organization'
 SITE_ID=BASE+'/#website'
 GUIDES=json.loads((ROOT/'scripts'/'seo_guides.json').read_text(encoding='utf-8'))
@@ -128,7 +128,7 @@ def update_llms():
     p=PUBLIC/'llms.txt'
     text=p.read_text(encoding='utf-8') if p.exists() else '# Pomerol International\n'
     if '/resources/guides/' not in text:
-        text += '\n## Buyer Guides\n- https://pomerol.in/resources/guides/\n' + ''.join(f'- https://pomerol.in/resources/guides/{g["slug"]}/ — {g["title"]}\n' for g in GUIDES)
+        text += '\n## Buyer Guides\n- https://pomerol.trade/resources/guides/\n' + ''.join(f'- https://pomerol.trade/resources/guides/{g["slug"]}/ — {g["title"]}\n' for g in GUIDES)
     p.write_text(text,encoding='utf-8')
 
 def main():

@@ -30,7 +30,7 @@ function sameSiteRequest(request, url) {
   if (!origin) return true;
   try {
     const host = new URL(origin).hostname;
-    return host === url.hostname || host === 'pomerol.in' || host.endsWith('.nostalgia-ho.workers.dev');
+    return host === url.hostname || host === 'pomerol.trade' || host.endsWith('.nostalgia-ho.workers.dev');
   } catch {
     return false;
   }

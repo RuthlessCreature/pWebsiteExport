@@ -48,7 +48,7 @@ def main():
             assert '"@type":"Article"' in t, p
             assert 'hreflang="en"' in t, p
             assert 'hreflang="x-default"' in t, p
-            assert f'rel="canonical" href="https://pomerol.in/{code}/resources/guides/{slug}/"' in t, p
+            assert f'rel="canonical" href="https://pomerol.trade/{code}/resources/guides/{slug}/"' in t, p
 
     for code in b.LOCALES:
         hub = b.PUBLIC / code / 'resources' / 'guides' / 'index.html'
@@ -60,11 +60,11 @@ def main():
     sitemap = (b.PUBLIC / 'sitemap.xml').read_text(encoding='utf-8')
     for code in b.LOCALES:
         for slug in b.PRIORITY:
-            assert f'https://pomerol.in/{code}/resources/guides/{slug}/' in sitemap, (code, slug)
+            assert f'https://pomerol.trade/{code}/resources/guides/{slug}/' in sitemap, (code, slug)
     for code in b.LOCALES:
         for kind in ('services','about','resources','contact'):
-            assert f'https://pomerol.in/{code}/{kind}/' in sitemap, (code, kind)
-    assert 'https://pomerol.in/sitemap/' in sitemap
+            assert f'https://pomerol.trade/{code}/{kind}/' in sitemap, (code, kind)
+    assert 'https://pomerol.trade/sitemap/' in sitemap
 
     html_sitemap = b.PUBLIC / 'sitemap' / 'index.html'
     assert html_sitemap.is_file(), html_sitemap

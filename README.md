@@ -2,17 +2,17 @@
 
 Public corporate sourcing website for **Pomerol International Trade (Zhuhai) Co., Ltd. / 波美猴国际贸易（珠海）有限公司**.
 
-**Official website:** https://pomerol.in/en/
+**Official website:** https://pomerol.trade/en/
 
 ## Public discovery entry points
 
-- Website: https://pomerol.in/en/
-- China sourcing services: https://pomerol.in/services/
-- China sourcing agent: https://pomerol.in/china-sourcing-agent/
-- Buyer guides: https://pomerol.in/resources/guides/
-- Case library: https://pomerol.in/cases/
-- HTML site directory: https://pomerol.in/sitemap/
-- XML sitemap: https://pomerol.in/sitemap.xml
+- Website: https://pomerol.trade/en/
+- China sourcing services: https://pomerol.trade/services/
+- China sourcing agent: https://pomerol.trade/china-sourcing-agent/
+- Buyer guides: https://pomerol.trade/resources/guides/
+- Case library: https://pomerol.trade/cases/
+- HTML site directory: https://pomerol.trade/sitemap/
+- XML sitemap: https://pomerol.trade/sitemap.xml
 
 The production site currently publishes English, Chinese, Japanese, Russian, Spanish and Portuguese content, including multilingual buyer guides with reciprocal `hreflang` relationships.
 
@@ -31,7 +31,7 @@ Cloudflare Workers Static Assets. The public website has no OpenAI/ChatGPT runti
 
 ## Production deployment
 
-The Worker name is `pwebsite-export` and the production custom domain is **pomerol.in**. Pushes to `main` run the SEO build/audit gates and deploy through GitHub Actions to Cloudflare Workers.
+The Worker name is `pwebsite-export` and the production custom domain is **pomerol.trade**. Pushes to `main` run the SEO build/audit gates and deploy through GitHub Actions to Cloudflare Workers.
 
 The production SEO pipeline validates canonical URLs, XML sitemap coverage, reciprocal multilingual `hreflang`, buyer-guide coverage, case/landing-page generation, static internal links, HTML sitemap discovery, public contact source truth and the active IndexNow verification key. Successful production deployments submit the canonical URL set through IndexNow.
 

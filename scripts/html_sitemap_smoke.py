@@ -19,7 +19,7 @@ def main():
     if 'href="/sitemap/"' not in resources or 'data-html-sitemap-link' not in resources:
         raise SystemExit('resources page does not expose HTML sitemap')
     xml = (PUBLIC / 'sitemap.xml').read_text(encoding='utf-8')
-    if 'https://pomerol.in/sitemap/' not in xml:
+    if 'https://pomerol.trade/sitemap/' not in xml:
         raise SystemExit('HTML sitemap missing from XML sitemap')
     print(f'HTML sitemap smoke OK: {len(links)} unique crawlable links')
 

@@ -4,7 +4,7 @@ import html,json,re
 from datetime import date
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[1]; PUBLIC=ROOT/'public'; BASE='https://pomerol.in'; TODAY=date.today().isoformat()
+ROOT=Path(__file__).resolve().parents[1]; PUBLIC=ROOT/'public'; BASE='https://pomerol.trade'; TODAY=date.today().isoformat()
 ORG_ID=BASE+'/#organization'; SITE_ID=BASE+'/#website'
 LANG_HOMES={'en':'/en/','zh-CN':'/zh/','ja':'/ja/','ru':'/ru/','es':'/es/','pt':'/pt/'}
 CASE_HUBS={'en':'/cases/','zh-CN':'/zh/cases/','ja':'/ja/cases/','ru':'/ru/cases/','es':'/es/cases/','pt':'/pt/cases/'}

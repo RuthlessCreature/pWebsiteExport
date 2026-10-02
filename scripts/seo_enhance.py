@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'
-BASE='https://pomerol.in'
+BASE='https://pomerol.trade'
 ORG_ID=BASE+'/#organization'
 TODAY=date.today().isoformat()
 

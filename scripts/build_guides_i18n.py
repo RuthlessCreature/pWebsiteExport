@@ -5,7 +5,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
 ROOT=Path(__file__).resolve().parents[1]
-PUBLIC=ROOT/'public'; BASE='https://pomerol.in'; ORG_ID=BASE+'/#organization'; SITE_ID=BASE+'/#website'
+PUBLIC=ROOT/'public'; BASE='https://pomerol.trade'; ORG_ID=BASE+'/#organization'; SITE_ID=BASE+'/#website'
 EN={g['slug']:g for g in json.loads((ROOT/'scripts'/'seo_guides.json').read_text(encoding='utf-8'))}
 PRIORITY=['how-to-source-products-from-china','china-supplier-verification-checklist','china-rfq-template-guide','china-pre-shipment-inspection-guide']
 LOCALES={

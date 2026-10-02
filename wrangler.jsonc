@@ -6,7 +6,7 @@
   "workers_dev": true,
   "routes": [
     {
-      "pattern": "pomerol.in",
+      "pattern": "pomerol.trade",
       "custom_domain": true
     }
   ],

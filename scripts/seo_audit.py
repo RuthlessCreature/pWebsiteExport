@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / 'public'
-BASE = 'https://pomerol.in'
+BASE = 'https://pomerol.trade'
 
 TITLE_RE = re.compile(r'<title>(.*?)</title>', re.I | re.S)
 DESC_RE = re.compile(r'<meta\s+name=["\']description["\']\s+content=["\']([^"\']*)["\']', re.I)

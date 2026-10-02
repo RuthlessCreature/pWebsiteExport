@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://pomerol.in/sitemap.xml
+Sitemap: https://pomerol.trade/sitemap.xml
