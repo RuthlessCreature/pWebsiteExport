@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/build_html_sitemap.py scripts/html_sitemap_smoke.py scripts/patch_global_sitemap_link.py scripts/patch_static_stylesheets.py scripts/patch_image_loading.py scripts/add_image_dimensions.py scripts/seo_audit.py scripts/notify_indexnow.py
+          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/build_html_sitemap.py scripts/html_sitemap_smoke.py scripts/patch_global_sitemap_link.py scripts/patch_static_stylesheets.py scripts/patch_image_loading.py scripts/add_image_dimensions.py scripts/seo_audit.py scripts/notify_indexnow.py scripts/seo_live_check.py
           python scripts/build_seo_clean.py
           python scripts/seo_enhance.py
           python scripts/build_guides.py
@@ -121,8 +121,13 @@ jobs:
           wranglerVersion: "4.125.0"
           command: deploy
 
-      - name: Verify and notify IndexNow
+      - name: Verify production SEO and contact routes
+        id: seo_smoke
         if: steps.deploy.outcome == 'success'
+        run: python scripts/seo_live_check.py
+
+      - name: Verify and notify IndexNow
+        if: steps.deploy.outcome == 'success' && steps.seo_smoke.outcome == 'success'
         continue-on-error: true
         shell: bash
         run: python scripts/notify_indexnow.py
