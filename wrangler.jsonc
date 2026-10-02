@@ -6,8 +6,8 @@
   "workers_dev": true,
   "routes": [
     {
-      "pattern": "pomerol.trade",
-      "custom_domain": true
+      "pattern": "pomerol.trade/*",
+      "zone_name": "pomerol.trade"
     }
   ],
   "assets": {
@@ -33,3 +33,4 @@
     "enabled": true
   }
 }
+
