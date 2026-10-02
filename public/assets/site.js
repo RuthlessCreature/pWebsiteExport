@@ -50,13 +50,28 @@ document.addEventListener('click',(e)=>{
 const inquiry=document.querySelector('[data-inquiry-form]');
 if(inquiry){
   trackEvent('rfq_open','contact-form');
-  inquiry.addEventListener('submit',(e)=>{
+  inquiry.addEventListener('submit',async (e)=>{
     e.preventDefault();
     const data=new FormData(inquiry);
-    trackEvent('rfq_mailto_submit','contact-form');
-    const lines=['Hello Pomerol International,','',`Name: ${data.get('name')||''}`,`Company: ${data.get('company')||''}`,`Email: ${data.get('email')||''}`,`Country/Market: ${data.get('market')||''}`,`Product / Category: ${data.get('product')||''}`,`Estimated quantity: ${data.get('quantity')||''}`,`Target timing: ${data.get('timing')||''}`,'',String(data.get('message')||'')];
-    const subject=encodeURIComponent(`Sourcing inquiry — ${data.get('product')||data.get('company')||'new project'}`);
-    const body=encodeURIComponent(lines.join('\n'));
-    window.location.href=`mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
+    const status=inquiry.querySelector('[data-inquiry-status]');
+    const button=inquiry.querySelector('button[type="submit"]');
+    const original=button.textContent;
+    button.disabled=true;
+    if(status)status.textContent=inquiry.dataset.sending||'Sending…';
+    try{
+      const response=await fetch('/api/inquiry',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({
+        name:data.get('name'),company:data.get('company'),email:data.get('email'),market:data.get('market'),product:data.get('product'),
+        quantity:data.get('quantity'),timing:data.get('timing'),message:data.get('message'),consent:data.get('consent')==='on',website:data.get('website'),page:location.pathname
+      })});
+      if(!response.ok)throw new Error('submission_failed');
+      trackEvent('rfq_submit','contact-form');
+      inquiry.reset();
+      if(status)status.textContent=inquiry.dataset.success||'Sent.';
+    }catch(_error){
+      if(status)status.textContent=inquiry.dataset.error||'Unable to send. Please email Yusuf directly.';
+    }finally{
+      button.disabled=false;
+      button.textContent=original;
+    }
   });
 }

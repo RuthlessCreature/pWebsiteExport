@@ -17,6 +17,12 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   },
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "abd.yusuf.ibrahim.mustafa@gmail.com"
+    }
+  ],
   "analytics_engine_datasets": [
     {
       "binding": "ANALYTICS",
