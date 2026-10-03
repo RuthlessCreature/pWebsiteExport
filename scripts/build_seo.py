@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import html,json,re
-from datetime import date
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[1]; PUBLIC=ROOT/'public'; BASE='https://pomerol.trade'; TODAY=date.today().isoformat()
+ROOT=Path(__file__).resolve().parents[1]; PUBLIC=ROOT/'public'; BASE='https://pomerol.trade'
 ORG_ID=BASE+'/#organization'; SITE_ID=BASE+'/#website'
 LANG_HOMES={'en':'/en/','zh-CN':'/zh/','ja':'/ja/','ru':'/ru/','es':'/es/','pt':'/pt/'}
 CASE_HUBS={'en':'/cases/','zh-CN':'/zh/cases/','ja':'/ja/cases/','ru':'/ru/cases/','es':'/es/cases/','pt':'/pt/cases/'}
@@ -60,7 +59,7 @@ def crumbs(url,title):
 def seo_tags(title,desc,can,language,img,kind='website',alts=None,extra=None):
     links=[]
     for code,href in (alts or {}).items(): links.append(f'<link rel="alternate" hreflang="{esc(code)}" href="{esc(BASE+href)}">')
-    graph=[org(),website(),{'@type':'WebPage','@id':can+'#webpage','url':can,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':language,'primaryImageOfPage':{'@type':'ImageObject','url':img},'dateModified':TODAY}]+(extra or [])
+    graph=[org(),website(),{'@type':'WebPage','@id':can+'#webpage','url':can,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':language,'primaryImageOfPage':{'@type':'ImageObject','url':img}}]+(extra or [])
     data=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     return '\n'.join([f'<link rel="canonical" href="{esc(can)}">',*links,'<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">','<meta property="og:site_name" content="Pomerol International">',f'<meta property="og:type" content="{kind}">',f'<meta property="og:title" content="{esc(title)}">',f'<meta property="og:description" content="{esc(desc)}">',f'<meta property="og:url" content="{esc(can)}">',f'<meta property="og:image" content="{esc(img)}">','<meta name="twitter:card" content="summary_large_image">',f'<meta name="twitter:title" content="{esc(title)}">',f'<meta name="twitter:description" content="{esc(desc)}">',f'<meta name="twitter:image" content="{esc(img)}">',f'<script type="application/ld+json">{data}</script>'])
 
@@ -114,7 +113,7 @@ def build_solution_pages(cases,solutions):
 def build_case_pages(cases):
     for c in cases:
         s=f"{c['n']}-{slugify(c['title'])}"; can=f'{BASE}/case-studies/{s}/'; title=c['title']+' — China Sourcing Case'; desc=f'Representative {c["industry"].lower()} sourcing case for a {c["profile"].lower()} in {c["market"]}: supplier work, controls and outcome.'
-        article={'@type':'Article','@id':can+'#article','headline':c['title'],'description':desc,'image':f'{BASE}/assets/photos/{c["photo"]}','author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':can,'datePublished':TODAY,'dateModified':TODAY,'articleSection':c['industry'],'keywords':c['tags'],'inLanguage':'en'}
+        article={'@type':'Article','@id':can+'#article','headline':c['title'],'description':desc,'image':f'{BASE}/assets/photos/{c["photo"]}','author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':can,'articleSection':c['industry'],'keywords':c['tags'],'inLanguage':'en'}
         tags=seo_tags(title+' | Pomerol International',desc,can,'en',f'{BASE}/assets/photos/{c["photo"]}',kind='article',extra=[article,crumbs(can,title)]); chips=''.join(f'<span class="chip">{esc(x)}</span>' for x in c['tags'])
         body=f'<section class="page-hero"><div class="wrap page-hero-grid"><div><div class="eyebrow">{esc(c["industry"])} · {esc(c["market"])}</div><h1 class="display">{esc(c["title"])}</h1><p>{esc(desc)}</p><div class="hero-note"><span>Client pseudonym: {esc(c["client"])}</span><span>{esc(c["profile"])}</span></div></div><div><img src="/assets/photos/{esc(c["photo"])}" alt="{esc(c["industry"])} sourcing case"></div></div></section><section class="section compact"><div class="wrap"><div class="notice-box">Transparency note: the client name and selected commercial details are pseudonymized or illustrative. The sourcing risks and control methods are representative examples, not third-party endorsements.</div></div></section><section class="section"><div class="wrap detail-grid"><aside class="sticky"><div class="eyebrow">Case {esc(c["n"])}</div><h2>{esc(c["sector"])}</h2><ul class="list-clean"><li><strong>Market</strong><span>{esc(c["market"])}</span></li><li><strong>Industry</strong><span>{esc(c["industry"])}</span></li><li><strong>Client profile</strong><span>{esc(c["profile"])}</span></li></ul><div class="chips">{chips}</div></aside><div><div class="case-full"><h2>Buyer challenge</h2><p>{esc(c["challenge"])}</p></div><div class="case-full"><h2>China-side sourcing work</h2><p>{esc(c["work"])}</p></div><div class="case-full"><h2>Control points</h2><p>{esc(c["control"])}</p></div><div class="case-full"><h2>Representative outcome</h2><p>{esc(c["result"])}</p></div></div></div></section><section class="band"><div class="wrap band-grid"><h2 class="display">Working on a similar sourcing problem?</h2><div><a class="btn ghost" href="/contact/">Send it to Yusuf →</a></div></div></section>'
         page=f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)} | Pomerol International</title><meta name="description" content="{esc(desc)}"><link rel="icon" href="/assets/logo.svg"><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script>{tags}</head><body>{nav()}<main>{body}</main>{footer()}</body></html>'
@@ -129,14 +128,14 @@ def link_case_hub(cases):
 
 def misc_files(cases,solutions):
     sol='\n'.join(f'- [{s["title"]}]({BASE}/{s["slug"]}/): {s["description"]}' for s in solutions); cs='\n'.join(f'- [Case {c["n"]}: {c["title"]}]({BASE}/case-studies/{c["n"]}-{slugify(c["title"])}/)' for c in cases)
-    (PUBLIC/'llms.txt').write_text('# Pomerol International\n\n> China sourcing, procurement, OEM/ODM, supplier control, quality inspection, consolidation and export coordination from Zhuhai, Guangdong, China.\n\nContact: Yusuf — abd.yusuf.ibrahim.mustafa@gmail.com — +86 132 4269 4270\n\n## Core service pages\n'+sol+'\n\n## Representative sourcing playbooks\n\nThese entries are illustrative sourcing playbooks, not evidence of completed customer projects or third-party endorsements. Client names, buyer profiles, markets, quantities, and outcomes may be pseudonymous or illustrative unless a page explicitly identifies independently verified customer evidence. Category photographs illustrate product types and are not proof of a named shipment.\n\n'+cs+'\n',encoding='utf-8')
+    (PUBLIC/'llms.txt').write_text('# Pomerol International\n\n> China sourcing, procurement, OEM/ODM, supplier control, quality inspection, consolidation and export coordination from Zhuhai, Guangdong, China.\n\nContact: Yusuf — abd.yusuf.ibrahim.mustafa@gmail.com — +86 132 4269 4270\nContact page: https://pomerol.trade/contact/\nChinese contact page: https://pomerol.trade/zh/contact/\nXML sitemap: https://pomerol.trade/sitemap.xml\n\n## Core service pages\n'+sol+'\n\n## Representative sourcing playbooks\n\nThese entries are illustrative sourcing playbooks, not evidence of completed customer projects or third-party endorsements. Client names, buyer profiles, markets, quantities, and outcomes may be pseudonymous or illustrative unless a page explicitly identifies independently verified customer evidence. Category photographs illustrate product types and are not proof of a named shipment.\n\n'+cs+'\n',encoding='utf-8')
     urls=[]
     for p in sorted(PUBLIC.rglob('*.html')):
         r=p.relative_to(PUBLIC).as_posix()
         if p.name=='404.html' or r=='index.html' or r.startswith(('privacy/','terms/')): continue
         loc=canonical(p); im=image_for(p.read_text(encoding='utf-8')); urls.append((loc,im if '/assets/photos/' in im else None))
     ns='xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'; x=[f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset {ns}>']
-    for loc,im in urls: x.append(f'<url><loc>{esc(loc)}</loc><lastmod>{TODAY}</lastmod>'+(f'<image:image><image:loc>{esc(im)}</image:loc></image:image>' if im else '')+'</url>')
+    for loc,im in urls: x.append(f'<url><loc>{esc(loc)}</loc>'+(f'<image:image><image:loc>{esc(im)}</image:loc></image:image>' if im else '')+'</url>')
     x.append('</urlset>'); (PUBLIC/'sitemap.xml').write_text('\n'.join(x),encoding='utf-8')
     robots = f'''User-agent: *
 Allow: /

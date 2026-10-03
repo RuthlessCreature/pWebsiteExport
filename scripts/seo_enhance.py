@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import html, json, re
-from datetime import date
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'
 BASE='https://pomerol.trade'
 ORG_ID=BASE+'/#organization'
-TODAY=date.today().isoformat()
 
 def esc(v): return html.escape(str(v),quote=True)
 def slugify(v): return re.sub(r'[^a-z0-9]+','-',v.lower()).strip('-')
@@ -57,7 +55,7 @@ def add_specialized_schema(sol,case_rows):
             '@type':'Article','@id':url+'#article','headline':c['title'],
             'description':desc,'image':f'{BASE}/assets/photos/{c["photo"]}',
             'author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},
-            'mainEntityOfPage':url,'datePublished':TODAY,'dateModified':TODAY,
+            'mainEntityOfPage':url,
             'articleSection':c['industry'],'keywords':c['tags'],'inLanguage':'en'
         })
 
@@ -88,3 +86,4 @@ def main():
     print('SEO enhancement OK: Service/Article schemas and internal link directory')
 
 if __name__=='__main__': main()
+
