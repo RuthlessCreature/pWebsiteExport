@@ -149,6 +149,9 @@ User-agent: Slurp
 User-agent: DuckDuckBot
 User-agent: YandexBot
 User-agent: Baiduspider
+User-agent: 360Spider
+User-agent: Sogou web spider
+User-agent: Sogou inst spider
 Allow: /
 Allow: /api/social-image/
 Disallow: /api/

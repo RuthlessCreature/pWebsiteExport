@@ -136,6 +136,9 @@ if not re.search(r"(?im)^sitemap:\s*https://pomerol\.trade/sitemap\.xml\s*$", ro
     raise RuntimeError("robots.txt does not declare the production sitemap")
 if not re.search(r"OAI-SearchBot|Claude-SearchBot|PerplexityBot", robots):
     raise RuntimeError("robots.txt does not include AI search crawlers")
+for crawler in ("360Spider", "Sogou web spider", "Sogou inst spider"):
+    if f"user-agent: {crawler}".lower() not in robots.lower():
+        raise RuntimeError(f"robots.txt does not explicitly allow {crawler}")
 if not re.search(r"(?ims)^User-agent:\s*Applebot\s*$[\s\S]*?^Allow:\s*/\s*$", robots):
     raise RuntimeError("robots.txt does not explicitly allow Applebot search")
 if not re.search(r"(?ims)^User-agent:\s*Applebot-Extended\s*$[\s\S]*?^Disallow:\s*/\s*$", robots):
@@ -208,7 +211,7 @@ for title, matching_urls in titles.items():
 if failures:
     raise RuntimeError(f"Sitemap SEO checks failed ({len(failures)}):\n" + "\n".join(failures[:30]))
 
-for bot in ("Googlebot", "bingbot", "OAI-SearchBot", "Claude-SearchBot", "PerplexityBot"):
+for bot in ("Googlebot", "bingbot", "360Spider", "Sogou web spider/4.0", "Sogou inst spider/4.0", "OAI-SearchBot", "Claude-SearchBot", "PerplexityBot"):
     fetch(f"{BASE}/", bot)
 
 print(f"{HOST}: robots, llms, {len(urls)} sitemap pages, unique titles, H1, descriptions, canonicals, indexability, contact, and search-intent checks passed")
