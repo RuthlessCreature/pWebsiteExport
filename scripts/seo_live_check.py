@@ -108,6 +108,10 @@ if not re.search(r"(?im)^sitemap:\s*https://pomerol\.trade/sitemap\.xml\s*$", ro
     raise RuntimeError("robots.txt does not declare the production sitemap")
 if not re.search(r"OAI-SearchBot|Claude-SearchBot|PerplexityBot", robots):
     raise RuntimeError("robots.txt does not include AI search crawlers")
+if not re.search(r"(?ims)^User-agent:\s*Applebot\s*$[\s\S]*?^Allow:\s*/\s*$", robots):
+    raise RuntimeError("robots.txt does not explicitly allow Applebot search")
+if not re.search(r"(?ims)^User-agent:\s*Applebot-Extended\s*$[\s\S]*?^Disallow:\s*/\s*$", robots):
+    raise RuntimeError("robots.txt does not explicitly block Applebot-Extended training")
 if not llms.strip():
     raise RuntimeError("llms.txt is empty")
 if "abd.yusuf.ibrahim.mustafa@gmail.com" not in contact or not re.search(r"132\D*4269\D*4270", contact) or "Yusuf" not in contact:

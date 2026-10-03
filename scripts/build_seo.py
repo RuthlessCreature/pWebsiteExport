@@ -160,12 +160,14 @@ User-agent: Claude-SearchBot
 User-agent: Claude-User
 User-agent: PerplexityBot
 User-agent: Perplexity-User
+User-agent: Applebot
 Allow: /
 Allow: /api/social-image/
 Disallow: /api/
 
 User-agent: GPTBot
 User-agent: ClaudeBot
+User-agent: Applebot-Extended
 Disallow: /
 
 Sitemap: {BASE}/sitemap.xml
