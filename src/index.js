@@ -29,6 +29,13 @@ function escapeHtml(value) {
   return value.replace(/[&<>\"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;' })[char]);
 }
 
+function permanentRedirect(url) {
+  return new Response(null, {
+    status: 308,
+    headers: { location: url.toString(), 'cache-control': 'no-store' }
+  });
+}
+
 async function handleInquiry(request, env, url) {
   if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   if (!sameSiteRequest(request, url)) return json({ error: 'forbidden' }, 403);
@@ -97,12 +104,12 @@ export default {
     if (url.hostname === 'www.pomerol.trade') {
       url.hostname = 'pomerol.trade';
       if (url.pathname === '/' || url.pathname === '/index.html') url.pathname = '/en/';
-      return Response.redirect(url.toString(), 308);
+      return permanentRedirect(url);
     }
 
     if (url.pathname === '/' || url.pathname === '/index.html') {
       url.pathname = '/en/';
-      return Response.redirect(url.toString(), 308);
+      return permanentRedirect(url);
     }
 
     if (url.pathname === '/api/inquiry') return handleInquiry(request, env, url);

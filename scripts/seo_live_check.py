@@ -10,6 +10,7 @@ from html.parser import HTMLParser
 from urllib.error import HTTPError
 from urllib.request import HTTPRedirectHandler, build_opener
 from urllib.parse import urlsplit
+from time import time_ns
 
 HOST = "pomerol.trade"
 BASE = f"https://{HOST}"
@@ -23,6 +24,10 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 def verify_home_redirect(url: str, expected_location: str) -> None:
+    cache_key = f"seo_monitor={time_ns()}"
+    separator = "&" if "?" in url else "?"
+    url = f"{url}{separator}{cache_key}"
+    expected_location = f"{expected_location}?{cache_key}"
     opener = build_opener(NoRedirect)
     request = urllib.request.Request(url, headers={"User-Agent": UA, "Cache-Control": "no-cache"})
     try:
