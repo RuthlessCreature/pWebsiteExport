@@ -13,6 +13,15 @@ Public corporate sourcing website for **Pomerol International Trade (Zhuhai) Co.
 - Case library: https://pomerol.trade/cases/
 - HTML site directory: https://pomerol.trade/sitemap/
 - XML sitemap: https://pomerol.trade/sitemap.xml
+- Robots policy: https://pomerol.trade/robots.txt
+- AI-readable site overview: https://pomerol.trade/llms.txt
+- Contact and inquiry page: https://pomerol.trade/contact/
+
+## Business Contact
+
+**Yusuf**
+- Tel: +86 132 4269 4270
+- Email: abd.yusuf.ibrahim.mustafa@gmail.com
 
 The production site currently publishes English, Chinese, Japanese, Russian, Spanish and Portuguese content, including multilingual buyer guides with reciprocal `hreflang` relationships.
 
