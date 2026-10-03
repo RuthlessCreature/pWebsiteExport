@@ -123,6 +123,8 @@ contact = fetch(f"{BASE}/contact/")
 key_file = fetch(f"{BASE}/{KEY}.txt").strip()
 verify_home_redirect(f"{BASE}/", f"{BASE}/en/")
 verify_home_redirect("https://www.pomerol.trade/", f"{BASE}/en/")
+verify_home_redirect(f"{BASE}/index.html", f"{BASE}/en/")
+verify_home_redirect("https://www.pomerol.trade/index.html", f"{BASE}/en/")
 if key_file != KEY:
     raise RuntimeError("IndexNow key verification file does not match")
 if not re.search(r"(?im)^sitemap:\s*https://pomerol\.trade/sitemap\.xml\s*$", robots):
