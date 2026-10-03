@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.github/workflows/**'
+      - 'scripts/seo_live_check.py'
+      - 'scripts/notify_indexnow.py'
   workflow_dispatch:
 
 permissions:
