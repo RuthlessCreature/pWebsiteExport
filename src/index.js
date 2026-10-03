@@ -96,6 +96,12 @@ export default {
     const url = new URL(request.url);
     if (url.hostname === 'www.pomerol.trade') {
       url.hostname = 'pomerol.trade';
+      if (url.pathname === '/') url.pathname = '/en/';
+      return Response.redirect(url.toString(), 308);
+    }
+
+    if (url.pathname === '/') {
+      url.pathname = '/en/';
       return Response.redirect(url.toString(), 308);
     }
 

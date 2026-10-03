@@ -7,12 +7,31 @@ import xml.etree.ElementTree as ET
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from html.parser import HTMLParser
+from urllib.error import HTTPError
+from urllib.request import HTTPRedirectHandler, build_opener
 from urllib.parse import urlsplit
 
 HOST = "pomerol.trade"
 BASE = f"https://{HOST}"
 KEY = "6ef27e4a81efe1ff6c679ee852d012f2"
 UA = "SEO-Monitor/2.0 (+https://pomerol.trade/)"
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def verify_home_redirect(url: str, expected_location: str) -> None:
+    opener = build_opener(NoRedirect)
+    request = urllib.request.Request(url, headers={"User-Agent": UA, "Cache-Control": "no-cache"})
+    try:
+        response = opener.open(request, timeout=25)
+    except HTTPError as response:
+        pass
+    location = response.headers.get("Location", "")
+    if response.code != 308 or location != expected_location:
+        raise RuntimeError(f"{url}: expected HTTP 308 to {expected_location}, got HTTP {response.code} to {location or '(no Location)'}")
 
 
 def fetch(url: str, user_agent: str = UA) -> str:
@@ -102,6 +121,8 @@ robots = fetch(f"{BASE}/robots.txt")
 llms = fetch(f"{BASE}/llms.txt")
 contact = fetch(f"{BASE}/contact/")
 key_file = fetch(f"{BASE}/{KEY}.txt").strip()
+verify_home_redirect(f"{BASE}/", f"{BASE}/en/")
+verify_home_redirect("https://www.pomerol.trade/", f"{BASE}/en/")
 if key_file != KEY:
     raise RuntimeError("IndexNow key verification file does not match")
 if not re.search(r"(?im)^sitemap:\s*https://pomerol\.trade/sitemap\.xml\s*$", robots):
