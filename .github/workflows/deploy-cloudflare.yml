@@ -77,6 +77,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python scripts/validate_robots.py
           ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
           ! grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|13923387986|8613923387986' public --include='*.html' --include='*.js'
           ! grep -Rni 'pwebsite-export\.nostalgia-ho\.workers\.dev' public --include='*.html' --include='*.xml' --include='*.txt'
