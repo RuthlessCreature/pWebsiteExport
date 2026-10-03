@@ -140,37 +140,33 @@ def misc_files(cases,solutions):
     x.append('</urlset>'); (PUBLIC/'sitemap.xml').write_text('\n'.join(x),encoding='utf-8')
     robots = f'''User-agent: *
 Allow: /
+Allow: /api/social-image/
+Disallow: /api/
+
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Bingbot
+User-agent: Slurp
+User-agent: DuckDuckBot
+User-agent: YandexBot
+User-agent: Baiduspider
+Allow: /
+Allow: /api/social-image/
 Disallow: /api/
 
 User-agent: OAI-SearchBot
-Allow: /
-Disallow: /api/
-
 User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
 Allow: /
+Allow: /api/social-image/
 Disallow: /api/
 
 User-agent: GPTBot
-Disallow: /
-
-User-agent: Claude-SearchBot
-Allow: /
-Disallow: /api/
-
-User-agent: Claude-User
-Allow: /
-Disallow: /api/
-
 User-agent: ClaudeBot
 Disallow: /
-
-User-agent: PerplexityBot
-Allow: /
-Disallow: /api/
-
-User-agent: Perplexity-User
-Allow: /
-Disallow: /api/
 
 Sitemap: {BASE}/sitemap.xml
 '''
