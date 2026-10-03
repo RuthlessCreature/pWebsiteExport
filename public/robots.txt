@@ -10,6 +10,10 @@ User-agent: Slurp
 User-agent: DuckDuckBot
 User-agent: YandexBot
 User-agent: Baiduspider
+User-agent: 360Spider
+User-agent: Sogou web spider
+User-agent: Sogou inst spider
+User-agent: Applebot
 Allow: /
 Allow: /api/social-image/
 Disallow: /api/
@@ -26,7 +30,7 @@ Disallow: /api/
 
 User-agent: GPTBot
 User-agent: ClaudeBot
+User-agent: Applebot-Extended
 Disallow: /
 
 Sitemap: https://pomerol.trade/sitemap.xml
-
