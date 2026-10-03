@@ -142,6 +142,8 @@ if not re.search(r"(?ims)^User-agent:\s*Applebot-Extended\s*$[\s\S]*?^Disallow:\
     raise RuntimeError("robots.txt does not explicitly block Applebot-Extended training")
 if not llms.strip():
     raise RuntimeError("llms.txt is empty")
+if "illustrative sourcing playbooks, not evidence of completed customer projects" not in llms:
+    raise RuntimeError("llms.txt must disclose that representative sourcing playbooks are not verified completed customer projects")
 if "abd.yusuf.ibrahim.mustafa@gmail.com" not in contact or not re.search(r"132\D*4269\D*4270", contact) or "Yusuf" not in contact:
     raise RuntimeError("Contact page does not contain the unified contact details")
 
@@ -207,5 +209,6 @@ for bot in ("Googlebot", "bingbot", "OAI-SearchBot", "Claude-SearchBot", "Perple
     fetch(f"{BASE}/", bot)
 
 print(f"{HOST}: robots, llms, {len(urls)} sitemap pages, unique titles, H1, descriptions, canonicals, indexability, contact, and search-intent checks passed")
+
 
 

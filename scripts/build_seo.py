@@ -129,7 +129,7 @@ def link_case_hub(cases):
 
 def misc_files(cases,solutions):
     sol='\n'.join(f'- [{s["title"]}]({BASE}/{s["slug"]}/): {s["description"]}' for s in solutions); cs='\n'.join(f'- [Case {c["n"]}: {c["title"]}]({BASE}/case-studies/{c["n"]}-{slugify(c["title"])}/)' for c in cases)
-    (PUBLIC/'llms.txt').write_text('# Pomerol International\n\n> China sourcing, procurement, OEM/ODM, supplier control, quality inspection, consolidation and export coordination from Zhuhai, Guangdong, China.\n\nContact: Yusuf — abd.yusuf.ibrahim.mustafa@gmail.com — +86 132 4269 4270\n\n## Core service pages\n'+sol+'\n\n## Representative case archive\n'+cs+'\n',encoding='utf-8')
+    (PUBLIC/'llms.txt').write_text('# Pomerol International\n\n> China sourcing, procurement, OEM/ODM, supplier control, quality inspection, consolidation and export coordination from Zhuhai, Guangdong, China.\n\nContact: Yusuf — abd.yusuf.ibrahim.mustafa@gmail.com — +86 132 4269 4270\n\n## Core service pages\n'+sol+'\n\n## Representative sourcing playbooks\n\nThese entries are illustrative sourcing playbooks, not evidence of completed customer projects or third-party endorsements. Client names, buyer profiles, markets, quantities, and outcomes may be pseudonymous or illustrative unless a page explicitly identifies independently verified customer evidence. Category photographs illustrate product types and are not proof of a named shipment.\n\n'+cs+'\n',encoding='utf-8')
     urls=[]
     for p in sorted(PUBLIC.rglob('*.html')):
         r=p.relative_to(PUBLIC).as_posix()
@@ -185,4 +185,5 @@ def main():
         if p.name!='404.html' and 'rel="canonical"' not in p.read_text(encoding='utf-8'): raise SystemExit(f'missing canonical: {p}')
     print(f'SEO build OK: {len(list(PUBLIC.rglob("*.html")))} HTML, 36 case pages, 14 solution pages')
 if __name__=='__main__': main()
+
 

@@ -23,7 +23,10 @@ XML sitemap: https://pomerol.trade/sitemap.xml
 - [Hotel Supplies & FF&E Sourcing in China](https://pomerol.trade/hotel-supplies-sourcing-china/): Hotel supplies and FF&E sourcing in China for lighting, guest-room accessories, linen, tableware, bathroom products, furniture and staged project consolidation.
 - [Warehouse, Logistics & MRO Sourcing in China](https://pomerol.trade/warehouse-mro-sourcing-china/): Warehouse and MRO sourcing in China for racking, consumables, replacement parts, industrial hardware, multi-SKU consolidation and recurring replenishment.
 
-## Representative case archive
+## Representative sourcing playbooks
+
+These entries are illustrative sourcing playbooks, not evidence of completed customer projects or third-party endorsements. Client names, buyer profiles, markets, quantities, and outcomes may be pseudonymous or illustrative unless a page explicitly identifies independently verified customer evidence. Category photographs illustrate product types and are not proof of a named shipment.
+
 - [Case 01: AC/DC EV charging equipment supplier program](https://pomerol.trade/case-studies/01-ac-dc-ev-charging-equipment-supplier-program/)
 - [Case 02: Machine-vision BOM and motion-control sourcing](https://pomerol.trade/case-studies/02-machine-vision-bom-and-motion-control-sourcing/)
 - [Case 03: 1L soda-lime glass bottle and closure program](https://pomerol.trade/case-studies/03-1l-soda-lime-glass-bottle-and-closure-program/)
@@ -75,3 +78,4 @@ XML sitemap: https://pomerol.trade/sitemap.xml
 
 ## Free buyer tool
 - [China supplier RFQ builder](https://pomerol.trade/tools/china-rfq-builder/): Create a structured request for quotation and a comparable supplier response checklist. Inputs are processed in the browser and are not submitted or saved.
+
