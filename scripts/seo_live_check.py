@@ -32,8 +32,8 @@ def verify_home_redirect(url: str, expected_location: str) -> None:
     request = urllib.request.Request(url, headers={"User-Agent": UA, "Cache-Control": "no-cache"})
     try:
         response = opener.open(request, timeout=25)
-    except HTTPError as response:
-        pass
+    except HTTPError as error:
+        response = error
     location = response.headers.get("Location", "")
     if response.code != 308 or location != expected_location:
         raise RuntimeError(f"{url}: expected HTTP 308 to {expected_location}, got HTTP {response.code} to {location or '(no Location)'}")
