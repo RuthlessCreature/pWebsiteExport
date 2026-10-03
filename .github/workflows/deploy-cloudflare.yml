@@ -59,12 +59,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/build_html_sitemap.py scripts/html_sitemap_smoke.py scripts/patch_global_sitemap_link.py scripts/patch_static_stylesheets.py scripts/patch_image_loading.py scripts/add_image_dimensions.py scripts/seo_audit.py scripts/notify_indexnow.py scripts/seo_live_check.py scripts/build_rfq_tool.py
+          python -m py_compile scripts/build_seo.py scripts/build_seo_clean.py scripts/seo_enhance.py scripts/build_guides.py scripts/build_guides_i18n.py scripts/build_guides_i18n_full.py scripts/build_html_sitemap.py scripts/html_sitemap_smoke.py scripts/patch_global_sitemap_link.py scripts/patch_static_stylesheets.py scripts/patch_image_loading.py scripts/add_image_dimensions.py scripts/seo_audit.py scripts/notify_indexnow.py scripts/seo_live_check.py scripts/build_rfq_tool.py scripts/finalize_seo_metadata.py
           python scripts/build_seo_clean.py
           python scripts/seo_enhance.py
           python scripts/build_guides.py
           python scripts/build_guides_i18n_full.py
           python scripts/build_rfq_tool.py
+          python scripts/finalize_seo_metadata.py
 
       - name: Validate static site, case library and SEO gates
         shell: bash
