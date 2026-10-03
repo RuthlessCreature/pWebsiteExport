@@ -155,6 +155,8 @@ for url, keyword in [
         raise RuntimeError(f"{url}: {'; '.join(issues)}")
     if keyword.casefold() not in page.titles[0].casefold() or keyword.casefold() not in page.h1s[0].casefold():
         raise RuntimeError(f"{url}: title and H1 must cover {keyword!r}")
+    if url == f"{BASE}/en/" and "Pomerol International" not in page.titles[0]:
+        raise RuntimeError(f"{url}: homepage title must use the distinct Pomerol International brand")
 
 pending = deque([f"{BASE}/sitemap.xml"])
 visited: set[str] = set()

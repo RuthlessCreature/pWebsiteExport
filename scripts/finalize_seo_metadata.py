@@ -24,12 +24,11 @@ PHOTO_ALT = {
 def concise_title(value: str) -> str:
     title = html.unescape(value).strip()
     title = re.sub(r'\s*[—–-]\s*China Sourcing Case', '', title, flags=re.I)
-    title = re.sub(r'\s*\|\s*Pomerol International\s*$', ' | Pomerol', title, flags=re.I)
     if len(title) <= 70:
         return title
 
     # A colon often separates the main query from a long explanatory subtitle.
-    brand = ' | Pomerol' if re.search(r'\s\|\sPomerol$', title, flags=re.I) else ''
+    brand = ' | Pomerol International' if re.search(r'\s\|\sPomerol International$', title, flags=re.I) else ''
     core = title[:-len(brand)] if brand else title
     if ':' in core:
         core = core.split(':', 1)[0].rstrip(' —–-')
