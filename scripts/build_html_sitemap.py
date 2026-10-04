@@ -104,7 +104,7 @@ def patch_resources() -> None:
     if 'data-html-sitemap-link' in text:
         return
     block = ('<div class="resource" data-html-sitemap-link><div><strong>Full HTML site directory</strong>'
-             '<span>Browse every indexable service page, case study and multilingual buyer guide from one crawlable directory.</span>'
+             '<span>Browse every indexable service page, illustrative sourcing scenario and multilingual buyer guide from one crawlable directory.</span>'
              '</div><a class="small-link" href="/sitemap/">Open site directory →</a></div>')
     marker = '<div class="notice-box" style="margin-top:26px">'
     if marker not in text:
@@ -145,7 +145,7 @@ def render(pages: list[dict[str, str]]) -> str:
 
     canonical = BASE + '/sitemap/'
     title = 'HTML Sitemap | Pomerol International'
-    desc = 'Browse every indexable Pomerol International service page, sourcing case study and multilingual China sourcing buyer guide.'
+    desc = 'Browse every indexable Pomerol International service page, illustrative sourcing scenario and multilingual China sourcing buyer guide.'
     schema_json = json.dumps(
         {
             '@context': 'https://schema.org',
