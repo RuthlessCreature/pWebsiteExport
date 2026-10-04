@@ -60,6 +60,7 @@ jobs:
           python scripts/build_guides_i18n_full.py
           python scripts/build_rfq_tool.py
           python scripts/finalize_seo_metadata.py
+          python scripts/build_html_sitemap.py
           python scripts/validate_organization_schema.py
 
       - name: Validate static site, case library and SEO gates
@@ -67,6 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/validate_robots.py
+          python scripts/html_sitemap_smoke.py
           ! grep -RniE 'images\.pexels\.com|pexels\.com|openai|chatgpt|api\.openai\.com|fonts\.googleapis\.com|cdnjs|jsdelivr|unpkg' public --include='*.html' --include='*.css' --include='*.js'
           ! grep -RniE 'Nicole|13923387986@163\.com|139 2338 7986|13923387986|8613923387986' public --include='*.html' --include='*.js'
           ! grep -Rni 'pwebsite-export\.nostalgia-ho\.workers\.dev' public --include='*.html' --include='*.xml' --include='*.txt'
