@@ -8,6 +8,11 @@ ORG_ID=BASE+'/#organization'; SITE_ID=BASE+'/#website'
 LANG_HOMES={'en':'/en/','zh-CN':'/zh/','ja':'/ja/','ru':'/ru/','es':'/es/','pt':'/pt/'}
 CASE_HUBS={'en':'/cases/','zh-CN':'/zh/cases/','ja':'/ja/cases/','ru':'/ru/cases/','es':'/es/cases/','pt':'/pt/cases/'}
 REPL={'Nicole':'Yusuf','13923387986@163.com':'abd.yusuf.ibrahim.mustafa@gmail.com','+86 139 2338 7986':'+86 132 4269 4270','+8613923387986':'+8613242694270','8613923387986':'8613242694270'}
+SITEMAP_LASTMOD={
+    BASE+'/en/':'2026-10-04T04:50:28.000Z',
+    BASE+'/china-sourcing-agent/':'2026-10-04T04:50:28.000Z',
+    BASE+'/china-procurement-services/':'2026-10-04T04:50:28.000Z',
+}
 
 def esc(v): return html.escape(str(v),quote=True)
 def slugify(v): return re.sub(r'[^a-z0-9]+','-',v.lower()).strip('-')
@@ -135,7 +140,9 @@ def misc_files(cases,solutions):
         if p.name=='404.html' or r=='index.html' or r.startswith(('privacy/','terms/')): continue
         loc=canonical(p); im=image_for(p.read_text(encoding='utf-8')); urls.append((loc,im if '/assets/photos/' in im else None))
     ns='xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'; x=[f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset {ns}>']
-    for loc,im in urls: x.append(f'<url><loc>{esc(loc)}</loc>'+(f'<image:image><image:loc>{esc(im)}</image:loc></image:image>' if im else '')+'</url>')
+    for loc,im in urls:
+        lastmod=SITEMAP_LASTMOD.get(loc)
+        x.append(f'<url><loc>{esc(loc)}</loc>'+(f'<lastmod>{lastmod}</lastmod>' if lastmod else '')+(f'<image:image><image:loc>{esc(im)}</image:loc></image:image>' if im else '')+'</url>')
     x.append('</urlset>'); (PUBLIC/'sitemap.xml').write_text('\n'.join(x),encoding='utf-8')
     robots = f'''User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=no
