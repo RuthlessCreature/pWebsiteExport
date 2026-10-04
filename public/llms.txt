@@ -78,4 +78,6 @@ These entries are illustrative sourcing playbooks, not evidence of completed cus
 
 ## Free buyer tool
 - [China supplier RFQ builder](https://pomerol.trade/tools/china-rfq-builder/): Create a structured request for quotation and a comparable supplier response checklist. Inputs are processed in the browser and are not submitted or saved.
+## Machine-readable business overview
 
+- https://pomerol.trade/ai-overview.md — concise first-party service summary, scope limits and canonical pages.
