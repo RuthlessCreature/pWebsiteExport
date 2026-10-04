@@ -41,6 +41,14 @@ def concise_title(value: str) -> str:
     limit = 70 - len(suffix)
     core = title[:-len(suffix)] if suffix else title
     clipped = core[:limit].rsplit(' ', 1)[0].rstrip(' ,:;—–-')
+    # Keep the shortened title semantically complete. A hard word-boundary cut
+    # can leave a trailing preposition (for example, "... Checklist for | ...").
+    dangling = {
+        'a', 'an', 'the', 'for', 'of', 'to', 'in', 'on', 'with',
+        'and', 'or', 'by', 'from', 'at', 'as', 'via',
+    }
+    while clipped and clipped.rsplit(' ', 1)[-1].casefold() in dangling:
+        clipped = clipped.rsplit(' ', 1)[0].rstrip(' ,:;—–-')
     return clipped + suffix
 
 
