@@ -2,10 +2,15 @@
 from __future__ import annotations
 
 import html
+import json
 import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 from urllib.parse import urlsplit
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import build_seo  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / 'public'
@@ -141,7 +146,28 @@ def render(pages: list[dict[str, str]]) -> str:
     canonical = BASE + '/sitemap/'
     title = 'HTML Sitemap | Pomerol International'
     desc = 'Browse every indexable Pomerol International service page, sourcing case study and multilingual China sourcing buyer guide.'
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{canonical}"><meta name="robots" content="index,follow,max-snippet:-1"><link rel="icon" href="/assets/logo.svg"><link rel="stylesheet" href="/assets/site.css"><style>.sitemap-summary{{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}}.sitemap-summary span{{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff;color:var(--muted)}}.sitemap-grid{{display:grid;gap:22px}}.sitemap-group{{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}}.sitemap-group-head{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:8px}}.sitemap-group-head h2{{margin:0;font-size:1.3rem}}.sitemap-group-head span{{color:var(--muted);font-size:.9rem}}.sitemap-group ul{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}}.sitemap-group li{{padding:10px 0;border-bottom:1px solid #edf0f2;display:flex;flex-direction:column;gap:3px}}.sitemap-group a{{font-weight:650}}.sitemap-group small{{color:var(--muted);overflow-wrap:anywhere}}@media(max-width:760px){{.sitemap-group ul{{grid-template-columns:1fr}}}}</style><script defer src="/assets/site.js"></script></head><body><header class="nav-shell"><nav class="nav wrap"><a class="brand" href="/en/"><img src="/assets/logo.svg" alt="Pomerol International"><span>Pomerol International<small>China sourcing & procurement</small></span></a><button class="menu-btn" data-menu aria-label="Menu">☰</button><div class="navlinks" data-nav><a href="/china-sourcing-agent/">Sourcing</a><a href="/services/">Services</a><a href="/cases/">Case Library</a><a href="/resources/guides/">Buyer Guides</a><a href="/resources/">Resources</a><a class="nav-cta" href="/contact/">Start an RFQ</a></div></nav></header><main><section class="page-hero"><div class="wrap"><div class="eyebrow">Crawlable site directory</div><h1 class="display">HTML Sitemap</h1><p>A complete human-readable directory of Pomerol International's indexable sourcing services, case studies and multilingual buyer guides.</p><div class="sitemap-summary"><span>{len(pages)} linked canonical pages</span><span>6 languages</span><span>Services · cases · buyer guides</span></div></div></section><section class="section"><div class="wrap sitemap-grid">{''.join(sections)}</div></section></main><footer class="footer"><div class="wrap"><div class="footer-grid"><div><a class="brand" href="/en/"><img src="/assets/logo.svg" alt=""><span>Pomerol International<small>波美猴国际贸易（珠海）有限公司</small></span></a><p style="max-width:380px;color:#aebccd">China sourcing, procurement, OEM/ODM, quality control and export coordination for overseas buyers.</p></div><div><h4>Explore</h4><a href="/services/">Services</a><a href="/cases/">Case library</a><a href="/resources/guides/">Buyer guides</a></div><div><h4>Directory</h4><a href="/sitemap/">HTML sitemap</a><a href="/sitemap.xml">XML sitemap</a><a href="/resources/">Resources</a></div><div><h4>Yusuf</h4><a href="tel:+8613242694270">+86 132 4269 4270</a><a href="mailto:abd.yusuf.ibrahim.mustafa@gmail.com">abd.yusuf.ibrahim.mustafa@gmail.com</a><a href="https://wa.me/8613242694270">WhatsApp</a></div></div><div class="footer-bottom"><span>© 2026 Pomerol International Trade (Zhuhai) Co., Ltd.</span></div></div></footer></body></html>'''
+    schema_json = json.dumps(
+        {
+            '@context': 'https://schema.org',
+            '@graph': [
+                build_seo.org(),
+                build_seo.website(),
+                {
+                    '@type': 'WebPage',
+                    '@id': canonical + '#webpage',
+                    'url': canonical,
+                    'name': title,
+                    'description': desc,
+                    'isPartOf': {'@id': build_seo.SITE_ID},
+                    'about': {'@id': build_seo.ORG_ID},
+                    'inLanguage': 'en',
+                },
+            ],
+        },
+        ensure_ascii=False,
+        separators=(',', ':'),
+    )
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{canonical}"><script type="application/ld+json">{schema_json}</script><meta name="robots" content="index,follow,max-snippet:-1"><link rel="icon" href="/assets/logo.svg"><link rel="stylesheet" href="/assets/site.css"><style>.sitemap-summary{{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}}.sitemap-summary span{{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff;color:var(--muted)}}.sitemap-grid{{display:grid;gap:22px}}.sitemap-group{{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}}.sitemap-group-head{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:8px}}.sitemap-group-head h2{{margin:0;font-size:1.3rem}}.sitemap-group-head span{{color:var(--muted);font-size:.9rem}}.sitemap-group ul{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}}.sitemap-group li{{padding:10px 0;border-bottom:1px solid #edf0f2;display:flex;flex-direction:column;gap:3px}}.sitemap-group a{{font-weight:650}}.sitemap-group small{{color:var(--muted);overflow-wrap:anywhere}}@media(max-width:760px){{.sitemap-group ul{{grid-template-columns:1fr}}}}</style><script defer src="/assets/site.js"></script></head><body><header class="nav-shell"><nav class="nav wrap"><a class="brand" href="/en/"><img src="/assets/logo.svg" alt="Pomerol International"><span>Pomerol International<small>China sourcing & procurement</small></span></a><button class="menu-btn" data-menu aria-label="Menu">☰</button><div class="navlinks" data-nav><a href="/china-sourcing-agent/">Sourcing</a><a href="/services/">Services</a><a href="/cases/">Case Library</a><a href="/resources/guides/">Buyer Guides</a><a href="/resources/">Resources</a><a class="nav-cta" href="/contact/">Start an RFQ</a></div></nav></header><main><section class="page-hero"><div class="wrap"><div class="eyebrow">Crawlable site directory</div><h1 class="display">HTML Sitemap</h1><p>A complete human-readable directory of Pomerol International's indexable sourcing services, case studies and multilingual buyer guides.</p><div class="sitemap-summary"><span>{len(pages)} linked canonical pages</span><span>6 languages</span><span>Services · cases · buyer guides</span></div></div></section><section class="section"><div class="wrap sitemap-grid">{''.join(sections)}</div></section></main><footer class="footer"><div class="wrap"><div class="footer-grid"><div><a class="brand" href="/en/"><img src="/assets/logo.svg" alt=""><span>Pomerol International<small>波美猴国际贸易（珠海）有限公司</small></span></a><p style="max-width:380px;color:#aebccd">China sourcing, procurement, OEM/ODM, quality control and export coordination for overseas buyers.</p></div><div><h4>Explore</h4><a href="/services/">Services</a><a href="/cases/">Case library</a><a href="/resources/guides/">Buyer guides</a></div><div><h4>Directory</h4><a href="/sitemap/">HTML sitemap</a><a href="/sitemap.xml">XML sitemap</a><a href="/resources/">Resources</a></div><div><h4>Yusuf</h4><a href="tel:+8613242694270">+86 132 4269 4270</a><a href="mailto:abd.yusuf.ibrahim.mustafa@gmail.com">abd.yusuf.ibrahim.mustafa@gmail.com</a><a href="https://wa.me/8613242694270">WhatsApp</a></div></div><div class="footer-bottom"><span>© 2026 Pomerol International Trade (Zhuhai) Co., Ltd.</span></div></div></footer></body></html>'''
 
 
 def main() -> None:
