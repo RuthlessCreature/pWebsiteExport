@@ -3,6 +3,7 @@ from __future__ import annotations
 import html, json, re
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
+import build_seo as seo
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'
@@ -33,10 +34,10 @@ def footer():
     return '<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a class="brand" href="/en/"><img src="/assets/logo.svg" alt=""><span>Pomerol International<small>波美猴国际贸易（珠海）有限公司</small></span></a><p style="max-width:380px;color:#aebccd">China sourcing, procurement, OEM/ODM, quality control and export coordination for overseas buyers.</p></div><div><h4>Core services</h4><a href="/china-sourcing-agent/">China sourcing agent</a><a href="/china-procurement-services/">Procurement services</a><a href="/china-oem-odm-sourcing/">OEM / ODM</a><a href="/china-quality-inspection/">Quality inspection</a></div><div><h4>Buyer resources</h4><a href="/resources/guides/">Buyer guides</a><a href="/resources/">RFQ toolkit</a><a href="/cases/">Case library</a></div><div><h4>Yusuf</h4><a href="tel:+8613242694270">+86 132 4269 4270</a><a href="mailto:abd.yusuf.ibrahim.mustafa@gmail.com">abd.yusuf.ibrahim.mustafa@gmail.com</a><a href="https://wa.me/8613242694270">WhatsApp</a></div></div><div class="footer-bottom"><span>© 2026 Pomerol International Trade (Zhuhai) Co., Ltd.</span><span><a style="display:inline" href="/privacy/">Privacy</a> · <a style="display:inline" href="/terms/">Terms</a></span></div></div></footer>'
 
 def org_schema():
-    return {'@type':'Organization','@id':ORG_ID,'name':'Pomerol International','url':BASE+'/','logo':BASE+'/assets/logo.svg','email':'abd.yusuf.ibrahim.mustafa@gmail.com','telephone':'+86 132 4269 4270','address':{'@type':'PostalAddress','addressLocality':'Zhuhai','addressRegion':'Guangdong','addressCountry':'CN'}}
+    return seo.org()
 
 def head(title,desc,url,image,article=False):
-    graph=[org_schema(),{'@type':'WebSite','@id':SITE_ID,'url':BASE+'/','name':'Pomerol International','publisher':{'@id':ORG_ID}}, {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':'en','primaryImageOfPage':{'@type':'ImageObject','url':image}}]
+    graph=[org_schema(),seo.website(), {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':'en','primaryImageOfPage':{'@type':'ImageObject','url':image}}]
     if article:
         graph.append({'@type':'Article','@id':url+'#article','headline':title,'description':desc,'image':image,'author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':url,'inLanguage':'en','articleSection':'China Sourcing Buyer Guide'})
     graph.append({'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Pomerol International','item':BASE+'/'},{'@type':'ListItem','position':2,'name':'Buyer Guides','item':BASE+'/resources/guides/'},{'@type':'ListItem','position':3,'name':title,'item':url}] if article else [{'@type':'ListItem','position':1,'name':'Pomerol International','item':BASE+'/'},{'@type':'ListItem','position':2,'name':'Buyer Guides','item':url}]})

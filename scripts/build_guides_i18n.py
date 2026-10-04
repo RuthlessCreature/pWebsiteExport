@@ -3,6 +3,7 @@ from __future__ import annotations
 import html,json,re
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
+import build_seo as seo
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'; BASE='https://pomerol.trade'; ORG_ID=BASE+'/#organization'; SITE_ID=BASE+'/#website'
@@ -36,7 +37,7 @@ def load_cases():
     return {c['n']:c for c in out}
 
 def org_schema():
-    return {'@type':'Organization','@id':ORG_ID,'name':'Pomerol International','url':BASE+'/','logo':BASE+'/assets/logo.svg','email':'abd.yusuf.ibrahim.mustafa@gmail.com','telephone':'+86 132 4269 4270','address':{'@type':'PostalAddress','addressLocality':'Zhuhai','addressRegion':'Guangdong','addressCountry':'CN'}}
+    return seo.org()
 
 def cluster(slug=None):
     if slug:
@@ -61,7 +62,7 @@ def footer(code):
 
 def head(code,slug,title,desc,image,hub=False):
     l=LOCALES[code]; url=BASE+(l['hub'] if hub else f'/{code}/resources/guides/{slug}/')
-    graph=[org_schema(),{'@type':'WebSite','@id':SITE_ID,'url':BASE+'/','name':'Pomerol International','publisher':{'@id':ORG_ID}}, {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':l['lang'],'primaryImageOfPage':{'@type':'ImageObject','url':image}}]
+    graph=[org_schema(),seo.website(), {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':l['lang'],'primaryImageOfPage':{'@type':'ImageObject','url':image}}]
     if not hub: graph.append({'@type':'Article','@id':url+'#article','headline':title,'description':desc,'image':image,'author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':url,'inLanguage':l['lang'],'articleSection':'China Sourcing Buyer Guide'})
     data=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     return f'<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{url}">{alternates(None if hub else slug)}<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta property="og:type" content="{"website" if hub else "article"}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{image}"><link rel="icon" href="/assets/logo.svg"><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script><script type="application/ld+json">{data}</script>'
