@@ -8,6 +8,9 @@ from pathlib import Path
 robots_path = Path("public/robots.txt")
 robots = robots_path.read_text(encoding="utf-8")
 
+if not re.search(r"(?im)^Content-Signal:\s*search=yes,\s*ai-input=yes,\s*ai-train=no\s*$", robots):
+    raise SystemExit(f"{robots_path}: must allow search and AI input while blocking AI training")
+
 required_agents = (
     "Googlebot",
     "Bingbot",

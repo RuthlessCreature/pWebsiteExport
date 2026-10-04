@@ -134,6 +134,8 @@ if key_file != KEY:
     raise RuntimeError("IndexNow key verification file does not match")
 if not re.search(r"(?im)^sitemap:\s*https://pomerol\.trade/sitemap\.xml\s*$", robots):
     raise RuntimeError("robots.txt does not declare the production sitemap")
+if not re.search(r"(?im)^Content-Signal:\s*search=yes,\s*ai-input=yes,\s*ai-train=no\s*$", robots):
+    raise RuntimeError("robots.txt must allow search and AI input while blocking AI training")
 if not re.search(r"OAI-SearchBot|Claude-SearchBot|PerplexityBot", robots):
     raise RuntimeError("robots.txt does not include AI search crawlers")
 for crawler in ("360Spider", "Sogou web spider", "Sogou inst spider"):

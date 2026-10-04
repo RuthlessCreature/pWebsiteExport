@@ -138,6 +138,7 @@ def misc_files(cases,solutions):
     for loc,im in urls: x.append(f'<url><loc>{esc(loc)}</loc>'+(f'<image:image><image:loc>{esc(im)}</image:loc></image:image>' if im else '')+'</url>')
     x.append('</urlset>'); (PUBLIC/'sitemap.xml').write_text('\n'.join(x),encoding='utf-8')
     robots = f'''User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
 Allow: /
 Allow: /api/social-image/
 Disallow: /api/
