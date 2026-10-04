@@ -28,27 +28,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Prepare licensed local photography
+      - name: Verify bundled licensed photography
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p public/assets/photos
-          curl -fL --retry 3 'https://images.pexels.com/photos/9800000/pexels-photo-9800000.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/ev-charging.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/28752153/pexels-photo-28752153/free-photo-of-close-up-of-precision-machined-metal-parts.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/precision-machining.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/36423822/pexels-photo-36423822/free-photo-of-glass-bottles-on-a-production-line-in-factory.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/glass-packaging.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/4481326/pexels-photo-4481326.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/mixed-sku-warehouse.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/15195270/pexels-photo-15195270/free-photo-of-hotel-room-welcome-amenities-photo.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/hospitality-supplies.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/3912477/pexels-photo-3912477.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/product-development.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/19841116/pexels-photo-19841116.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/industrial-vision.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/36594160/pexels-photo-36594160/free-photo-of-industrial-worker-inspecting-batteries-in-warehouse.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/energy-storage.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/4487363/pexels-photo-4487363.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/warehouse-racking.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/8089156/pexels-photo-8089156.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/kitchen-cabinets.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/18915643/pexels-photo-18915643.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/process-tanks.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/17641123/pexels-photo-17641123.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/solar-rooftop.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/10117742/pexels-photo-10117742.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/pendant-lighting.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/35645884/pexels-photo-35645884.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/industrial-pumps.jpg
-          curl -fL --retry 3 'https://images.pexels.com/photos/14805031/pexels-photo-14805031.jpeg?auto=compress&dpr=1&h=900&w=1600' -o public/assets/photos/woodworking.jpg
-          test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -ge 15
+          test "$(find public/assets/photos -type f -name '*.jpg' | wc -l)" -eq 15
+          for photo in public/assets/photos/*.jpg; do
+            test -s "$photo"
+            test "$(od -An -tx1 -N3 "$photo" | tr -d ' \n')" = 'ffd8ff'
+          done
 
       - name: Validate public source contact identity
         shell: bash
