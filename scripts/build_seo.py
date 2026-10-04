@@ -9,9 +9,9 @@ LANG_HOMES={'en':'/en/','zh-CN':'/zh/','ja':'/ja/','ru':'/ru/','es':'/es/','pt':
 CASE_HUBS={'en':'/cases/','zh-CN':'/zh/cases/','ja':'/ja/cases/','ru':'/ru/cases/','es':'/es/cases/','pt':'/pt/cases/'}
 REPL={'Nicole':'Yusuf','13923387986@163.com':'abd.yusuf.ibrahim.mustafa@gmail.com','+86 139 2338 7986':'+86 132 4269 4270','+8613923387986':'+8613242694270','8613923387986':'8613242694270'}
 SITEMAP_LASTMOD={
-    BASE+'/en/':'2026-10-04T20:23:35.000Z',
-    BASE+'/china-sourcing-agent/':'2026-10-04T20:23:35.000Z',
-    BASE+'/china-procurement-services/':'2026-10-04T20:23:35.000Z',
+    BASE+'/en/':'2026-10-04T04:50:28.000Z',
+    BASE+'/china-sourcing-agent/':'2026-10-04T04:50:28.000Z',
+    BASE+'/china-procurement-services/':'2026-10-04T04:50:28.000Z',
 }
 
 def esc(v): return html.escape(str(v),quote=True)

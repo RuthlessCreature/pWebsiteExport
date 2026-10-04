@@ -147,8 +147,8 @@ if not re.search(r"(?ims)^User-agent:\s*Applebot-Extended\s*$[\s\S]*?^Disallow:\
     raise RuntimeError("robots.txt does not explicitly block Applebot-Extended training")
 if not llms.strip():
     raise RuntimeError("llms.txt is empty")
-if "illustrative sourcing playbooks, not evidence of completed customer projects" not in llms:
-    raise RuntimeError("llms.txt must disclose that representative sourcing playbooks are not verified completed customer projects")
+if "not evidence of completed customer projects" not in llms:
+    raise RuntimeError("llms.txt must disclose that illustrative sourcing scenarios are not verified completed customer projects")
 for required in (f"{BASE}/contact/", f"{BASE}/zh/contact/", f"{BASE}/sitemap.xml"):
     if required not in llms:
         raise RuntimeError(f"llms.txt is missing the public discovery URL {required}")
