@@ -12,7 +12,7 @@ def main():
         raise SystemExit('missing public/sitemap/index.html')
     text = page.read_text(encoding='utf-8')
     match = re.search(
-        r'<script\\b[^>]*type=["\\']application/ld\\+json["\\']>(.*?)</script>',
+        r'<script\b[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
         text,
         re.IGNORECASE | re.DOTALL,
     )
