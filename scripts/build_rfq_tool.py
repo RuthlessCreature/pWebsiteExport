@@ -1,12 +1,46 @@
+warning: in the working copy of 'scripts/build_rfq_tool.py', LF will be replaced by CRLF the next time Git touches it
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
+import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 URL = "https://pomerol.trade/tools/china-rfq-builder/"
 TEMPLATE = ROOT / "scripts" / "templates" / "china-rfq-builder.html"
+sys.path.insert(0, str(ROOT / "scripts"))
+
+import build_seo as seo  # noqa: E402
+
+JSONLD_RE = re.compile(
+    r'(<script\b[^>]*\btype=["\']application/ld\+json["\'][^>]*>)(.*?)(</script>)',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def render_template() -> str:
+    html = TEMPLATE.read_text(encoding="utf-8")
+    match = JSONLD_RE.search(html)
+    if not match:
+        raise RuntimeError("RFQ builder template is missing its JSON-LD graph")
+    graph = json.loads(match.group(2))
+    nodes = graph.get("@graph")
+    if not isinstance(nodes, list):
+        raise RuntimeError("RFQ builder template JSON-LD is missing @graph")
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        if node.get("@type") == "Organization":
+            node.clear()
+            node.update(seo.org())
+        elif node.get("@type") == "WebSite":
+            node.clear()
+            node.update(seo.website())
+    encoded = json.dumps(graph, ensure_ascii=False, separators=(",", ":"))
+    return html[:match.start(2)] + encoded + html[match.end(2):]
 
 
 def add_tool_card(path: Path, heading: str) -> None:
@@ -52,7 +86,7 @@ def add_llms_entry() -> None:
 def main() -> None:
     target = PUBLIC / "tools" / "china-rfq-builder" / "index.html"
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(TEMPLATE.read_text(encoding="utf-8"), encoding="utf-8")
+    target.write_text(render_template(), encoding="utf-8")
     for path, heading in (
         (PUBLIC / "resources" / "index.html", "Create a China supplier RFQ brief"),
         (PUBLIC / "resources" / "guides" / "index.html", "Use the free China supplier RFQ builder"),
@@ -65,3 +99,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
