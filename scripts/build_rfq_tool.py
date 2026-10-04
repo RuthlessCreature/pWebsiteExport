@@ -1,4 +1,3 @@
-warning: in the working copy of 'scripts/build_rfq_tool.py', LF will be replaced by CRLF the next time Git touches it
 #!/usr/bin/env python3
 from __future__ import annotations
 
