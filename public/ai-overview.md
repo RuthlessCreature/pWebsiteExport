@@ -23,4 +23,5 @@ The public case and scenario library is illustrative. It is not evidence by itse
 
 Yusuf  
 Phone / WhatsApp: +86 132 4269 4270  
-Email: abd.yusuf.ibrahim.mustafa@gmail.com
+Business email: contact@pomerol.trade  
+Direct email: abd.yusuf.ibrahim.mustafa@gmail.com
