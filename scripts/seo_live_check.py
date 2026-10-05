@@ -124,7 +124,9 @@ def inspect(url: str) -> tuple[str, MetadataParser, list[str]]:
 
 robots = fetch(f"{BASE}/robots.txt")
 llms = fetch(f"{BASE}/llms.txt")
-contact = fetch(f"{BASE}/contact/")
+contact_paths = ("", "es/", "ja/", "pt/", "ru/", "zh/")
+contact_pages = {locale or "en": fetch(f"{BASE}/{locale}contact/") for locale in contact_paths}
+contact = contact_pages["en"]
 key_file = fetch(f"{BASE}/{KEY}.txt").strip()
 verify_home_redirect(f"{BASE}/", f"{BASE}/en/")
 verify_home_redirect("https://www.pomerol.trade/", f"{BASE}/en/")
@@ -152,8 +154,9 @@ if "not evidence of completed customer projects" not in llms:
 for required in (f"{BASE}/contact/", f"{BASE}/zh/contact/", f"{BASE}/sitemap.xml"):
     if required not in llms:
         raise RuntimeError(f"llms.txt is missing the public discovery URL {required}")
-if "abd.yusuf.ibrahim.mustafa@gmail.com" not in contact or not re.search(r"132\D*4269\D*4270", contact) or "Yusuf" not in contact:
-    raise RuntimeError("Contact page does not contain the unified contact details")
+for locale, page in contact_pages.items():
+    if "abd.yusuf.ibrahim.mustafa@gmail.com" not in page or "contact@pomerol.trade" not in page or not re.search(r"132\D*4269\D*4270", page) or "Yusuf" not in page:
+        raise RuntimeError(f"{locale} contact page does not contain Yusuf’s unified contact details and business email")
 
 # Keep homepage and the focused sourcing-agent landing page aligned with their separate search intents.
 for url, keyword in [
