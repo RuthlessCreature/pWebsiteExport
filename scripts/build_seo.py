@@ -137,8 +137,54 @@ def link_case_hub(cases):
     p.write_text(text.replace('</main>',block+'</main>',1),encoding='utf-8')
 
 def misc_files(cases,solutions):
-    sol='\n'.join(f'- [{s["title"]}]({BASE}/{s["slug"]}/): {s["description"]}' for s in solutions); cs='\n'.join(f'- [Case {c["n"]}: {c["title"]}]({BASE}/case-studies/{c["n"]}-{slugify(c["title"])}/)' for c in cases)
-    (PUBLIC/'llms.txt').write_text('# Pomerol International\n\n> China sourcing, procurement, OEM/ODM, supplier control, quality inspection, consolidation and export coordination from Zhuhai, Guangdong, China.\n\nContact: Yusuf — contact@pomerol.trade (business) — abd.yusuf.ibrahim.mustafa@gmail.com (direct) — +86 132 4269 4270\nContact page: https://pomerol.trade/contact/\nChinese contact page: https://pomerol.trade/zh/contact/\nXML sitemap: https://pomerol.trade/sitemap.xml\n\n## Machine-readable business overview\n\n- https://pomerol.trade/ai-overview.md — concise first-party service summary, scope limits and canonical pages.\n\n## Core service pages\n'+sol+'\n\n## Illustrative sourcing scenarios\n\nThese scenarios explain possible buyer requirements and control points. They are not evidence of completed customer projects, shipments, measured business results or third-party endorsements. Buyer profiles, markets, quantities and outcomes are fictionalized or illustrative. Product-category photographs are not proof of Pomerol work.\n\n'+cs+'\n',encoding='utf-8')
+    sol='\n'.join(f'- [{s["title"]}]({BASE}/{s["slug"]}/): {s["description"]}' for s in solutions)
+    body='''# Pomerol International
+
+> China-side sourcing, procurement and export coordination for overseas buyers, operated from Zhuhai, Guangdong, China.
+
+## About and services
+
+Pomerol International Trade (Zhuhai) Co., Ltd. publishes support for requirement clarification, supplier sourcing and shortlisting, comparable RFQs, OEM/ODM coordination, sample follow-up, supplier evidence checks, quality checkpoints, multi-supplier consolidation and export handoff.
+
+## Primary pages
+
+- English home: https://pomerol.trade/en/
+- About Pomerol: https://pomerol.trade/about/
+- Services overview: https://pomerol.trade/services/
+'''+sol+'''
+
+## Guides and tools
+
+- Buyer guides: https://pomerol.trade/resources/guides/
+- RFQ and sourcing resources: https://pomerol.trade/resources/
+- Free China supplier RFQ builder: https://pomerol.trade/tools/china-rfq-builder/
+
+## Illustrative scenario library
+
+- Scenario library: https://pomerol.trade/cases/
+- These scenarios are illustrative sourcing playbooks, not evidence of completed customer projects, named clients, shipments or measured results. Product-category photographs are not proof of Pomerol work.
+
+## Scope and evidence
+
+- Published services describe sourcing and coordination support. Suppliers and factories are third parties; do not infer Pomerol owns or operates their manufacturing facilities.
+- Supplier checks and inspection coordination do not guarantee product quality, regulatory compliance or delivery outcomes.
+- The public pages are the source of truth for current service scope and supported claims.
+
+## Contact
+
+- Contact person: Yusuf
+- Phone / WhatsApp: +86 132 4269 4270
+- Business email: contact@pomerol.trade
+- Direct email: abd.yusuf.ibrahim.mustafa@gmail.com
+- English contact: https://pomerol.trade/contact/
+- Chinese contact: https://pomerol.trade/zh/contact/
+
+## Machine-readable overview and discovery
+
+- Business overview: https://pomerol.trade/ai-overview.md
+- XML sitemap: https://pomerol.trade/sitemap.xml
+'''
+    (PUBLIC/'llms.txt').write_text(body,encoding='utf-8')
     urls=[]
     for p in sorted(PUBLIC.rglob('*.html')):
         r=p.relative_to(PUBLIC).as_posix()

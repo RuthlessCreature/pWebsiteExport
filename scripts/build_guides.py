@@ -128,8 +128,14 @@ def rebuild_sitemap():
 def update_llms():
     p=PUBLIC/'llms.txt'
     text=p.read_text(encoding='utf-8') if p.exists() else '# Pomerol International\n'
-    if '/resources/guides/' not in text:
-        text += '\n## Buyer Guides\n- https://pomerol.trade/resources/guides/\n' + ''.join(f'- https://pomerol.trade/resources/guides/{g["slug"]}/ — {g["title"]}\n' for g in GUIDES)
+    missing=[g for g in GUIDES if f'https://pomerol.trade/resources/guides/{g["slug"]}/' not in text]
+    if missing:
+        links=''.join(f'- https://pomerol.trade/resources/guides/{g["slug"]}/ — {g["title"]}\n' for g in missing)
+        section='## Guides and tools\n'
+        if section in text:
+            text=text.replace(section,section+'\n'+links+'\n',1)
+        else:
+            text += '\n## Guides and tools\n\n'+links
     p.write_text(text,encoding='utf-8')
 
 def main():
