@@ -4,6 +4,7 @@
 
 - Prevent duplicate localized phone and email labels in generated footers, and make the production SEO smoke check reject repeated labels on contact pages and the China sourcing agent page.
 - Make the Cloudflare deployment status require the production SEO/contact smoke check to pass, so a successful upload alone is not reported as a verified deployment.
+- Correct the production footer-link matcher so it validates href anchors on all six localized contact pages and the China sourcing-agent landing page.
 - Verified the live `/china-sourcing-agent/` footer renders one `Business email` label for `contact@pomerol.trade`.
 
 ## 1.0.0 — 2026-08-23
