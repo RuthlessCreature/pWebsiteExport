@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import html
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -162,12 +163,45 @@ CONTACT_LABELS = {
     "es": ("Teléfono / WhatsApp:", "Correo directo:", "Correo comercial:"),
     "pt": ("Telefone / WhatsApp:", "E-mail direto:", "E-mail comercial:"),
 }
+
+
+def normalize_contact_label(value: str) -> str:
+    return re.sub(r"[\W_]+", "", value.casefold())
+
+
+def verify_footer_contact_labels(document: str, locale: str, url: str) -> None:
+    footer_match = re.search(r"<footer\b[^>]*>([\s\S]*?)</footer>", document, re.IGNORECASE)
+    if not footer_match:
+        raise RuntimeError(f"{url}: footer not found")
+
+    labels = CONTACT_LABELS[locale.rstrip("/").split("-", 1)[0]]
+    targets = (
+        ("tel:+8613242694270", labels[0]),
+        ("mailto:abd.yusuf.ibrahim.mustafa@gmail.com", labels[1]),
+        ("mailto:contact@pomerol.trade", labels[2]),
+    )
+    footer = footer_match.group(1)
+    for href, label in targets:
+        anchor_pattern = re.compile(
+            r"""<a\b(?=[^>]*\bhref=["']""" + re.escape(href) + r"""["'][^>]*>(.*?)</a>""",
+            re.IGNORECASE | re.DOTALL,
+        )
+        matches = anchor_pattern.findall(footer)
+        if len(matches) != 1:
+            raise RuntimeError(f"{url}: expected one footer link for {href}, found {len(matches)}")
+        visible = html.unescape(re.sub(r"<[^>]+>", " ", matches[0]))
+        occurrences = normalize_contact_label(visible).count(normalize_contact_label(label))
+        if occurrences != 1:
+            raise RuntimeError(
+                f"{url}: expected exactly one {label!r} label for {href}, found {occurrences}"
+            )
+
 for locale, page in contact_pages.items():
     if "abd.yusuf.ibrahim.mustafa@gmail.com" not in page or "contact@pomerol.trade" not in page or not re.search(r"132\D*4269\D*4270", page) or "Yusuf" not in page:
         raise RuntimeError(f"{locale} contact page does not contain Yusuf’s unified contact details and business email")
-    labels = CONTACT_LABELS[locale.rstrip("/").split("-", 1)[0]]
-    if not all(label in page for label in labels):
-        raise RuntimeError(f"{locale} contact footer is missing localized phone or email labels")
+    verify_footer_contact_labels(
+        page, locale, f"{BASE}/{locale if locale != 'en' else ''}contact/"
+    )
 
 # Keep homepage and the focused sourcing-agent landing page aligned with their separate search intents.
 for url, keyword in [
@@ -179,6 +213,8 @@ for url, keyword in [
         raise RuntimeError(f"{url}: {'; '.join(issues)}")
     if keyword.casefold() not in page.titles[0].casefold() or keyword.casefold() not in page.h1s[0].casefold():
         raise RuntimeError(f"{url}: title and H1 must cover {keyword!r}")
+    if url == f"{BASE}/china-sourcing-agent/":
+        verify_footer_contact_labels(fetch(url), "en", url)
     if url == f"{BASE}/en/" and "Pomerol International" not in page.titles[0]:
         raise RuntimeError(f"{url}: homepage title must use the distinct Pomerol International brand")
 
