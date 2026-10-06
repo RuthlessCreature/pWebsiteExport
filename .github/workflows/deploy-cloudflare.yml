@@ -144,10 +144,18 @@ jobs:
         uses: actions/github-script@v8
         env:
           DEPLOY_OUTCOME: ${{ steps.deploy.outcome }}
+          SEO_SMOKE_OUTCOME: ${{ steps.seo_smoke.outcome }}
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         with:
           script: |
-            const success = process.env.DEPLOY_OUTCOME === 'success';
+            const deploymentSucceeded = process.env.DEPLOY_OUTCOME === 'success';
+            const smokeSucceeded = process.env.SEO_SMOKE_OUTCOME === 'success';
+            const success = deploymentSucceeded && smokeSucceeded;
+            const description = success
+              ? 'Cloudflare Worker deployed and production SEO smoke passed'
+              : deploymentSucceeded
+                ? 'Cloudflare Worker deployed, but production SEO smoke failed'
+                : 'Cloudflare Worker deployment failed';
             const rawUrl = (process.env.DEPLOYMENT_URL || '').trim();
             const deploymentHost = rawUrl ? rawUrl.split(/\s+/)[0] : '';
             const deploymentUrl = deploymentHost && !/^https?:\/\//i.test(deploymentHost)
@@ -160,6 +168,6 @@ jobs:
               sha: context.sha,
               state: success ? 'success' : 'failure',
               target_url: success && deploymentUrl ? deploymentUrl : actionsUrl,
-              description: success ? 'Cloudflare Worker deployed' : 'Cloudflare Worker deployment failed',
+              description,
               context: 'cloudflare-worker'
             });
