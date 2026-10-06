@@ -23,7 +23,7 @@ PHOTO_ALT = {
 
 def concise_title(value: str) -> str:
     title = html.unescape(value).strip()
-    title = re.sub(r'\s*[—–-]\s*China Sourcing Case', '', title, flags=re.I)
+    title = re.sub(r'\s*[—–-]\s*China Sourcing (?:Case|Scenario)\b', '', title, flags=re.I)
     if len(title) <= 70:
         return title
 
