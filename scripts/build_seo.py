@@ -235,6 +235,7 @@ Pomerol International Trade (Zhuhai) Co., Ltd. publishes support for requirement
 - Direct email: abd.yusuf.ibrahim.mustafa@gmail.com
 - English contact: https://pomerol.trade/contact/
 - Chinese contact: https://pomerol.trade/zh/contact/
+- Contact methods are labeled in all six published languages.
 
 ## Machine-readable overview and discovery
 
