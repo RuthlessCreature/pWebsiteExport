@@ -83,8 +83,65 @@ def hreflang(p):
     if r in {'cases/index.html','zh/cases/index.html','ja/cases/index.html','ru/cases/index.html','es/cases/index.html','pt/cases/index.html'}: d=dict(CASE_HUBS); d['x-default']='/cases/'; return d
     return None
 
+FOOTER_CONTACT_LABELS = {
+    "en": ("Phone / WhatsApp:", "Direct email:", "Business email:"),
+    "zh": ("电话 / WhatsApp：", "联系邮箱：", "业务邮箱："),
+    "ja": ("電話 / WhatsApp：", "連絡用メール：", "業務用メール："),
+    "ru": ("Телефон / WhatsApp:", "Прямой email:", "Рабочий email:"),
+    "es": ("Teléfono / WhatsApp:", "Correo directo:", "Correo comercial:"),
+    "pt": ("Telefone / WhatsApp:", "E-mail direto:", "E-mail comercial:"),
+}
+
+
+def footer_contact_labels(language):
+    code = language.lower().split("-", 1)[0]
+    return FOOTER_CONTACT_LABELS.get(code, FOOTER_CONTACT_LABELS["en"])
+
+
+def label_footer_contacts(text):
+    language_match = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)', text, re.I)
+    labels = footer_contact_labels(language_match.group(1) if language_match else "en")
+
+    def update_footer(match):
+        footer = match.group(2)
+        targets = (
+            ("tel:+8613242694270", labels[0]),
+            ("mailto:abd.yusuf.ibrahim.mustafa@gmail.com", labels[1]),
+            ("mailto:contact@pomerol.trade", labels[2]),
+        )
+        for href, label in targets:
+            pattern = re.compile(
+                r'(<a\b[^>]*\bhref=["\']' + re.escape(href) + r'["\'][^>]*>)(.*?)(</a>)',
+                re.I | re.S,
+            )
+
+            def add_label(anchor):
+                plain = html.unescape(re.sub(r"<[^>]+>", "", anchor.group(2))).strip()
+                if label.casefold() in plain.casefold():
+                    return anchor.group(0)
+                return anchor.group(1) + label + " " + anchor.group(2) + anchor.group(3)
+
+            footer = pattern.sub(add_label, footer)
+
+        if "contact@pomerol.trade" not in footer.casefold():
+            direct_email = re.compile(
+                r'(<a\b[^>]*\bhref=["\']mailto:abd\.yusuf\.ibrahim\.mustafa@gmail\.com["\'][^>]*>.*?</a>)',
+                re.I | re.S,
+            )
+            if direct_email.search(footer):
+                footer = direct_email.sub(
+                    r'\1<a href="mailto:contact@pomerol.trade">' + labels[2] + ' contact@pomerol.trade</a>',
+                    footer,
+                    count=1,
+                )
+        return match.group(1) + footer + match.group(3)
+
+    return re.sub(r'(<footer\b[^>]*>)([\s\S]*?)(</footer>)', update_footer, text, count=1, flags=re.I)
+
+
 def inject(p):
     text=p.read_text(encoding='utf-8')
+    text=label_footer_contacts(text)
     for a,b in REPL.items(): text=text.replace(a,b)
     text=strip_seo(text); title,desc=title_desc(text); can=canonical(p); img=image_for(text)
     if p.name=='404.html': text=text.replace('</head>','<meta name="robots" content="noindex,follow"></head>')

@@ -154,9 +154,20 @@ if "not evidence of completed customer projects" not in llms:
 for required in (f"{BASE}/contact/", f"{BASE}/zh/contact/", f"{BASE}/sitemap.xml"):
     if required not in llms:
         raise RuntimeError(f"llms.txt is missing the public discovery URL {required}")
+CONTACT_LABELS = {
+    "en": ("Phone / WhatsApp:", "Direct email:", "Business email:"),
+    "zh": ("电话 / WhatsApp：", "联系邮箱：", "业务邮箱："),
+    "ja": ("電話 / WhatsApp：", "連絡用メール：", "業務用メール："),
+    "ru": ("Телефон / WhatsApp:", "Прямой email:", "Рабочий email:"),
+    "es": ("Teléfono / WhatsApp:", "Correo directo:", "Correo comercial:"),
+    "pt": ("Telefone / WhatsApp:", "E-mail direto:", "E-mail comercial:"),
+}
 for locale, page in contact_pages.items():
     if "abd.yusuf.ibrahim.mustafa@gmail.com" not in page or "contact@pomerol.trade" not in page or not re.search(r"132\D*4269\D*4270", page) or "Yusuf" not in page:
         raise RuntimeError(f"{locale} contact page does not contain Yusuf’s unified contact details and business email")
+    labels = CONTACT_LABELS[locale.rstrip("/").split("-", 1)[0]]
+    if not all(label in page for label in labels):
+        raise RuntimeError(f"{locale} contact footer is missing localized phone or email labels")
 
 # Keep homepage and the focused sourcing-agent landing page aligned with their separate search intents.
 for url, keyword in [
