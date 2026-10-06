@@ -165,7 +165,7 @@ CONTACT_LABELS = {
 for locale, page in contact_pages.items():
     if "abd.yusuf.ibrahim.mustafa@gmail.com" not in page or "contact@pomerol.trade" not in page or not re.search(r"132\D*4269\D*4270", page) or "Yusuf" not in page:
         raise RuntimeError(f"{locale} contact page does not contain Yusuf’s unified contact details and business email")
-    labels = CONTACT_LABELS[locale.split("-", 1)[0]]
+    labels = CONTACT_LABELS[locale.rstrip("/").split("-", 1)[0]]
     if not all(label in page for label in labels):
         raise RuntimeError(f"{locale} contact footer is missing localized phone or email labels")
 
