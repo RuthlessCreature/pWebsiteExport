@@ -117,7 +117,8 @@ def label_footer_contacts(text):
 
             def add_label(anchor):
                 plain = html.unescape(re.sub(r"<[^>]+>", "", anchor.group(2))).strip()
-                if label.casefold() in plain.casefold():
+                normalize = lambda value: re.sub(r"[\W_]+", "", value.casefold())
+                if normalize(label) in normalize(plain):
                     return anchor.group(0)
                 return anchor.group(1) + label + " " + anchor.group(2) + anchor.group(3)
 
