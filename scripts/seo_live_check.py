@@ -183,7 +183,7 @@ def verify_footer_contact_labels(document: str, locale: str, url: str) -> None:
     footer = footer_match.group(1)
     for href, label in targets:
         anchor_pattern = re.compile(
-            r"""<a\b(?=[^>]*\bhref=["']""" + re.escape(href) + r"""["'][^>]*>(.*?)</a>""",
+            r"""<a\b(?=[^>]*\bhref=["'])""" + re.escape(href) + r"""["'][^>]*>(.*?)</a>""",
             re.IGNORECASE | re.DOTALL,
         )
         matches = anchor_pattern.findall(footer)
