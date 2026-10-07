@@ -62,6 +62,7 @@ def footer(code):
 
 def head(code,slug,title,desc,image,hub=False):
     l=LOCALES[code]; url=BASE+(l['hub'] if hub else f'/{code}/resources/guides/{slug}/')
+    desc=seo.compact_description(desc)
     graph=[org_schema(),seo.website(), {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':l['lang'],'primaryImageOfPage':{'@type':'ImageObject','url':image}}]
     if not hub: graph.append({'@type':'Article','@id':url+'#article','headline':title,'description':desc,'image':image,'author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':url,'inLanguage':l['lang'],'articleSection':'China Sourcing Buyer Guide'})
     data=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
