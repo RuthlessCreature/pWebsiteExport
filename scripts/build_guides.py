@@ -11,6 +11,12 @@ BASE='https://pomerol.trade'
 ORG_ID=BASE+'/#organization'
 SITE_ID=BASE+'/#website'
 GUIDES=json.loads((ROOT/'scripts'/'seo_guides.json').read_text(encoding='utf-8'))
+GUIDE_OVERRIDES=json.loads((ROOT/'scripts'/'guide_overrides.json').read_text(encoding='utf-8'))
+for guide in GUIDES:
+    override=GUIDE_OVERRIDES.get(guide['slug'],{})
+    guide.update({k:v for k,v in override.items() if k not in ('appendSections','checklistAppend')})
+    guide.setdefault('sections',[]).extend(override.get('appendSections',[]))
+    guide.setdefault('checklist',[]).extend(override.get('checklistAppend',[]))
 
 def esc(v): return html.escape(str(v),quote=True)
 def slugify(v): return re.sub(r'[^a-z0-9]+','-',v.lower()).strip('-')
@@ -36,11 +42,14 @@ def footer():
 def org_schema():
     return seo.org()
 
-def head(title,desc,url,image,article=False):
+def head(title,desc,url,image,article=False,date_modified=None):
     desc=seo.compact_description(desc)
     graph=[org_schema(),seo.website(), {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'isPartOf':{'@id':SITE_ID},'about':{'@id':ORG_ID},'inLanguage':'en','primaryImageOfPage':{'@type':'ImageObject','url':image}}]
     if article:
-        graph.append({'@type':'Article','@id':url+'#article','headline':title,'description':desc,'image':image,'author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':url,'inLanguage':'en','articleSection':'China Sourcing Buyer Guide'})
+        article_schema={'@type':'Article','@id':url+'#article','headline':title,'description':desc,'image':image,'author':{'@id':ORG_ID},'publisher':{'@id':ORG_ID},'mainEntityOfPage':url,'inLanguage':'en','articleSection':'China Sourcing Buyer Guide'}
+        if date_modified:
+            article_schema['dateModified']=date_modified
+        graph.append(article_schema)
     graph.append({'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Pomerol International','item':BASE+'/'},{'@type':'ListItem','position':2,'name':'Buyer Guides','item':BASE+'/resources/guides/'},{'@type':'ListItem','position':3,'name':title,'item':url}] if article else [{'@type':'ListItem','position':1,'name':'Pomerol International','item':BASE+'/'},{'@type':'ListItem','position':2,'name':'Buyer Guides','item':url}]})
     data=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     return f'''<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{esc(url)}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><meta property="og:site_name" content="Pomerol International"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{esc(url)}"><meta property="og:image" content="{esc(image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(desc)}"><meta name="twitter:image" content="{esc(image)}"><link rel="icon" href="/assets/logo.svg"><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script><script type="application/ld+json">{data}</script>'''
@@ -60,17 +69,45 @@ def build_guides(cases):
     cmap={c['n']:c for c in cases}
     for g in GUIDES:
         url=f'{BASE}/resources/guides/{g["slug"]}/'; image=f'{BASE}/assets/photos/{g["image"]}'
-        sections=''.join(f'<section class="service-row"><div class="n">{i:02d}</div><div><h2>{esc(s["h"])}</h2><p>{esc(s["p"])}</p></div></section>' for i,s in enumerate(g['sections'],1))
+        def render_section(i,s):
+            table=''
+            if s.get('table'):
+                headers=''.join(f'<th scope="col">{esc(x)}</th>' for x in s['table']['headers'])
+                rows=''.join('<tr>'+''.join(f'<td>{esc(value)}</td>' for value in row)+'</tr>' for row in s['table']['rows'])
+                table=f'<div class="table-scroll" role="region" aria-label="{esc(s["table"].get("ariaLabel",s["h"]))}" tabindex="0"><table><thead><tr>{headers}</tr></thead><tbody>{rows}</tbody></table></div>'
+            points=''
+            if s.get('points'):
+                points='<ul>'+''.join(f'<li>{esc(point)}</li>' for point in s['points'])+'</ul>'
+            return f'<section class="service-row"><div class="n">{i:02d}</div><div><h2>{esc(s["h"])}</h2><p>{esc(s["p"])}</p>{table}{points}</div></section>'
+        sections=''.join(render_section(i,s) for i,s in enumerate(g['sections'],1))
         checklist=''.join(f'<li>{esc(x)}</li>' for x in g['checklist'])
+        template_html=''
+        template=g.get('downloadTemplate')
+        if template:
+            template_path=template['path'].lstrip('/')
+            template_file=PUBLIC/template_path
+            template_file.parent.mkdir(parents=True,exist_ok=True)
+            template_file.write_text(template['csv'],encoding='utf-8-sig',newline='')
+            template_html=f'<div class="notice-box"><strong>Blank planning tool:</strong> {esc(template["description"])} <a class="small-link" href="/{esc(template_path)}" download>{esc(template["label"])}</a></div>'
+        references=''
+        if g.get('references'):
+            items=''.join(f'<li><a href="{esc(ref["href"])}" target="_blank" rel="noopener noreferrer">{esc(ref["label"])}</a><p>{esc(ref["description"])}</p></li>' for ref in g['references'])
+            checked=f'<p class="muted">Official references checked: {esc(g["referencesCheckedOn"])}.</p>' if g.get('referencesCheckedOn') else ''
+            references=f'<section class="section"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Official references</div><h2 class="display">Verify the current standard and requirements.</h2></div><p>Use the edition and plan agreed for the order. Official standards and local requirements may change.</p></div><ul class="reference-list">{items}</ul>{checked}</div></section>'
+        faq=''
+        if g.get('faq'):
+            items=''.join(f'<details><summary>{esc(item["q"])}</summary><p>{esc(item["a"])}</p></details>' for item in g['faq'])
+            faq=f'<section class="section"><div class="wrap"><div class="eyebrow">Frequently asked questions</div><h2 class="display">Questions buyers should settle before release.</h2><div class="faq-list">{items}</div></div></section>'
         related=[]
         for cid in g['cases']:
             c=cmap.get(cid)
             if not c: continue
             slug=f'{c["n"]}-{slugify(c["title"])}'
             related.append(f'<article class="case-preview"><img src="/assets/photos/{esc(c["photo"])}" alt="{esc(c["industry"])} sourcing case" loading="lazy" decoding="async"><div class="case-preview-copy"><div class="meta">{esc(c["industry"])} · {esc(c["market"])}</div><h3><a href="/case-studies/{slug}/">{esc(c["title"])}</a></h3><p>{esc(c["result"])}</p></div></article>')
-        body=f'''<article><section class="page-hero"><div class="wrap page-hero-grid"><div><div class="eyebrow">China sourcing buyer guide</div><h1 class="display">{esc(g['h1'])}</h1><p>{esc(g['intro'])}</p><div class="hero-actions"><a class="btn primary" href="/{esc(g['service'])}/">Related sourcing service →</a><a class="btn light" href="/contact/">Ask Yusuf about a project</a></div></div><div><img src="/assets/photos/{esc(g['image'])}" alt="{esc(g['title'])}" loading="eager" fetchpriority="high" decoding="async"></div></div></section><section class="section"><div class="wrap detail-grid"><aside class="sticky"><div class="eyebrow">Buyer control points</div><h2 class="display" style="font-size:2.5rem">A process that can be checked, not guessed.</h2><p>Use this guide as an operating framework and adapt the depth of control to product risk, order value, customization and destination-market requirements.</p><div class="card"><h3>Working checklist</h3><ul>{checklist}</ul></div></aside><div>{sections}</div></div></section><section class="section dark"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Illustrative sourcing scenarios</div><h2 class="display">See how a buyer requirement can be translated into sourcing controls.</h2></div><p class="muted">These examples are illustrative, not evidence of completed customer projects, shipments, business results or endorsements. Buyer profiles, markets and selected details are fictionalized or illustrative.</p></div><div class="case-preview-grid">{''.join(related)}</div></div></section><section class="band"><div class="wrap band-grid"><h2 class="display">Apply this guide to a real China sourcing project.</h2><div><a class="btn ghost" href="/contact/">Send an RFQ →</a></div></div></section></article>'''
+        reviewed=f'<p class="guide-review-date">Guide last reviewed: {esc(g["dateModified"])}.</p>' if g.get('dateModified') else ''
+        body=f'''<article><section class="page-hero"><div class="wrap page-hero-grid"><div><div class="eyebrow">China sourcing buyer guide</div><h1 class="display">{esc(g['h1'])}</h1><p>{esc(g['intro'])}</p><div class="hero-actions"><a class="btn primary" href="/{esc(g['service'])}/">Related sourcing service →</a><a class="btn light" href="/contact/">Ask Yusuf about a project</a></div></div><div><img src="/assets/photos/{esc(g['image'])}" alt="{esc(g['title'])}" loading="eager" fetchpriority="high" decoding="async"></div></div></section><section class="section"><div class="wrap detail-grid"><aside class="sticky"><div class="eyebrow">Buyer control points</div><h2 class="display" style="font-size:2.5rem">A process that can be checked, not guessed.</h2><p>Use this guide as an operating framework and adapt the depth of control to product risk, order value, customization and destination-market requirements.</p><div class="card"><h3>Working checklist</h3><ul>{checklist}</ul></div>{template_html}</aside><div>{sections}</div></div></section>{faq}{references}<section class="section dark"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Illustrative sourcing scenarios</div><h2 class="display">See how a buyer requirement can be translated into sourcing controls.</h2></div><p class="muted">These examples are illustrative, not evidence of completed customer projects, shipments, business results or endorsements. Buyer profiles, markets and selected details are fictionalized or illustrative.</p></div><div class="case-preview-grid">{''.join(related)}</div></div></section><section class="band"><div class="wrap band-grid"><h2 class="display">Apply this guide to a real China sourcing project.</h2><div><a class="btn ghost" href="/contact/">Send an RFQ →</a></div></div>{reviewed}</section></article>'''
         d=PUBLIC/'resources'/'guides'/g['slug']; d.mkdir(parents=True,exist_ok=True)
-        (d/'index.html').write_text(f'<!doctype html><html lang="en"><head>{head(g["title"]+" | Pomerol International",g["description"],url,image,True)}</head><body>{nav()}<main>{body}</main>{footer()}</body></html>',encoding='utf-8')
+        (d/'index.html').write_text(f'<!doctype html><html lang="en"><head>{head(g["title"]+" | Pomerol International",g["description"],url,image,True,g.get("dateModified"))}</head><body>{nav()}<main>{body}</main>{footer()}</body></html>',encoding='utf-8')
 
 def inject_links():
     resources=PUBLIC/'resources'/'index.html'; text=resources.read_text(encoding='utf-8')
@@ -91,6 +128,7 @@ def inject_links():
         text=text.replace('</main>',block+'</main>',1); p.write_text(text,encoding='utf-8')
 
 def strip_fake_dates():
+    authorized={f'{BASE}/resources/guides/{g["slug"]}/#article':g['dateModified'] for g in GUIDES if g.get('dateModified')}
     for p in PUBLIC.rglob('*.html'):
         text=p.read_text(encoding='utf-8')
         def repl(m):
@@ -98,7 +136,9 @@ def strip_fake_dates():
             except Exception: return m.group(0)
             def walk(x):
                 if isinstance(x,dict):
-                    x.pop('datePublished',None); x.pop('dateModified',None)
+                    x.pop('datePublished',None)
+                    if x.get('@type')!='Article' or authorized.get(x.get('@id'))!=x.get('dateModified'):
+                        x.pop('dateModified',None)
                     for v in x.values(): walk(v)
                 elif isinstance(x,list):
                     for v in x: walk(v)

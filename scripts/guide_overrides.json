@@ -1,0 +1,97 @@
+{
+  "china-pre-shipment-inspection-guide": {
+    "title": "Pre-Shipment Inspection in China Checklist",
+    "description": "A buyer's guide to pre-shipment inspection in China: inspection timing, AQL sampling, defect handling, packaging checks, report evidence and shipment release.",
+    "h1": "Pre-Shipment Inspection in China: A Buyer’s Checklist Before Shipment",
+    "intro": "A pre-shipment inspection (PSI) checks a defined portion of a finished order against buyer-approved requirements before release. The inspection brief—not photos alone—sets what is checked, how samples are selected, how findings are recorded and who makes the shipment decision. A PSI is evidence from a defined inspection, not a guarantee that every unit is defect-free.",
+    "dateModified": "2026-10-08",
+    "referencesCheckedOn": "2026-10-08",
+    "appendSections": [
+      {
+        "h": "Compare pre-shipment inspection with the controls around it",
+        "p": "These controls answer different buyer questions. Supplier qualification, production checks, finished-goods sampling and loading checks are separate scopes; one does not automatically replace another. Confirm the actual provider, timing and written scope before treating any adjacent control as included in a service.",
+        "table": {
+          "ariaLabel": "Comparison of supplier, production, pre-shipment and loading checks",
+          "headers": ["Control point", "Buyer question", "What it can check", "What it does not establish"],
+          "rows": [
+            ["Supplier or factory review", "Is this supplier suitable for the project?", "Agreed checks of identity, site, capacity or records", "Whether the current finished lot meets the order specification"],
+            ["Pre-production or first-article approval", "Is the production baseline clear before a full run?", "Approved sample, drawing revision, materials or critical features", "The condition of the completed shipment lot"],
+            ["During-production check", "Can issues be found while there is time to correct them?", "Agreed progress points and characteristics in examined work", "The final condition of all finished and packed goods"],
+            ["Pre-shipment inspection (PSI)", "Does the inspected finished lot meet the agreed brief?", "Selected samples, agreed function or dimensions, appearance, quantity, labels and packaging", "That every unit is defect-free, legally compliant in every market or safe in transit"],
+            ["Loading supervision", "Was loading performed against agreed shipping instructions?", "Agreed observations of container condition, loading, marks, counts or seal", "Product conformity unless product inspection is separately in scope"]
+          ]
+        }
+      },
+      {
+        "h": "Schedule PSI when the lot is inspectable and before release",
+        "p": "Agree the inspection window with the factory and buyer before the ship date. The defined lot should be available for the agreed checks, the approved product and packaging references should be on hand, and the buyer should leave practical time for a decision, corrective work and any reinspection. Do not treat a fixed production-completion percentage as a universal rule: readiness depends on the order, sampling plan, product and contract. Confirm access, the exact lot, and who can authorize shipment release."
+      },
+      {
+        "h": "AQL sampling needs an agreed plan—not a number copied from a chart",
+        "p": "ISO 2859-1:2026 describes sampling schemes indexed by acceptance quality limit (AQL) for lot-by-lot inspection by attributes. An AQL label by itself does not tell a buyer which sample was selected or what decision rule applies. The purchase order or inspection brief should identify the agreed standard and edition, lot and characteristics, inspection level or plan where applicable, random sample-selection method, defect classes, and acceptance/rejection criteria. Use the applicable official standard and a competent quality professional for plan values; do not paste a generic sample-size table into a contract. A sample-based acceptance result is not a promise of zero defects in the lot."
+      },
+      {
+        "h": "Make the inspection brief specific enough to reproduce",
+        "p": "Identify the product and revision, lot size, quantity by SKU, approved drawing or sample, critical dimensions and tolerances, functional test steps, appearance references, labels and barcodes, accessories, retail packaging and export-carton requirements. State which items need measurement or a functional test, how a failure is recorded, what photos or instrument readings the buyer needs, and who receives the report. Resolve conflicting specifications before the inspection date."
+      },
+      {
+        "h": "Read the report as evidence with a defined scope",
+        "p": "A useful report states the date and site, order or lot identifier, quantity and sample-selection basis, the requirements checked, the test or measurement method, findings by defect class, observed quantities, supporting photos or readings, limitations and final status against the agreed plan. Ask the inspector to distinguish observed facts from conclusions. A PSI report does not replace laboratory testing, destination-market certification, a full-unit inspection, supplier financial due diligence or transport-damage prevention unless those items were separately defined and completed."
+      },
+      {
+        "h": "Decide what happens after a failed or limited inspection",
+        "p": "Before production, agree who can pause shipment and who has final release authority. If findings miss the agreed criteria, record the affected SKU and quantity, defect evidence, proposed correction, responsible party and deadline. The buyer may need to choose—under the contract—between rework, sorting, reinspection, a documented concession, partial release or rejection. An inspection finding alone does not decide refunds, liability or supplier acceptance; those depend on the parties’ agreement and applicable terms."
+      }
+    ],
+    "checklistAppend": [
+      "Order number, product, production site, lot and planned ship date",
+      "Quantity and configuration by SKU, model, size, color or version",
+      "Approved drawing, sample, specification and revision date",
+      "Agreed sampling standard and edition, plan and sample-selection rule",
+      "Defect classes and agreed acceptance/rejection criteria",
+      "Required functional tests, dimensions, tolerances and instruments",
+      "Label, barcode, accessory, retail-pack and export-carton references",
+      "Report recipient, corrective-action owner and shipment release authority"
+    ],
+    "downloadTemplate": {
+      "path": "resources/pre-shipment-inspection-brief.csv",
+      "label": "Download the blank PSI brief (CSV)",
+      "description": "Planning template only. Adapt it to the product, purchase contract, destination requirements and agreed inspection standard; it is not an ISO form or certification.",
+      "csv": "Section,Field,Buyer input,Acceptance criteria or evidence,Owner / decision,Notes\nOrder,Product name / model,,,,\nOrder,Purchase order / revision,,,,\nOrder,Factory / production site,,,,\nOrder,Lot size and planned inspection date,,,,\nOrder,Planned shipment date and release deadline,,,,\nConfiguration,SKU / model / size / color / version,,,,\nConfiguration,Quantity by SKU,,,,\nReference,Approved drawing / sample / specification revision,,,,\nSampling,Standard and edition agreed by the parties,,,,\nSampling,Inspection level / plan / lot definition where applicable,,,,\nSampling,Random sample-selection method and sample record,,,,\nAcceptance,Defect classes and agreed acceptance / rejection criteria,,,,\nTesting,Functional test steps and expected result,,,,\nMeasurement,Critical dimensions / tolerances / instrument,,,,\nAppearance,Approved visual reference and inspection conditions,,,,\nPackaging,Label / barcode / accessories / retail pack,,,,\nPackaging,Export carton / marks / packing quantity,,,,\nEvidence,Required photographs / readings / report language,,,,\nDisposition,Correction / rework / reinspection decision owner,,,,\nRelease,Final shipment release authority,,,,\n"
+    },
+    "faq": [
+      {
+        "q": "What is a pre-shipment inspection in China?",
+        "a": "It is an agreed inspection of a defined finished-goods lot before release or shipment. The brief sets the sample method, product requirements, evidence and decision rules; the inspector reports findings for the buyer's decision."
+      },
+      {
+        "q": "When should I book a pre-shipment inspection?",
+        "a": "Agree the window with the factory and buyer early enough for the lot to be ready and accessible, and leave time before shipment for review, correction and any reinspection. The correct timing depends on the order and agreed scope."
+      },
+      {
+        "q": "Does AQL mean that a certain number of defects is allowed in my order?",
+        "a": "Do not interpret an AQL value in isolation as a defect allowance or a zero-defect promise. The agreed sampling plan, lot, sample and acceptance/rejection rules determine the sample-based decision. Put the exact plan and criteria in the order brief."
+      },
+      {
+        "q": "Does passing PSI prove that every item is defect-free?",
+        "a": "No. A sample-based result describes the inspected sample under the agreed plan. It does not prove every unit is defect-free or replace other testing, compliance checks or transit controls."
+      },
+      {
+        "q": "Who decides whether the shipment is released?",
+        "a": "The buyer or the person named in the purchase agreement should retain the release decision. Confirm in writing who may accept a concession, request correction, order reinspection or authorize a partial release."
+      }
+    ],
+    "references": [
+      {
+        "label": "ISO 2859-1:2026 — Sampling procedures for inspection by attributes",
+        "href": "https://www.iso.org/standard/2859-1",
+        "description": "ISO lists the 2026 edition as published and describes sampling schemes indexed by AQL for lot-by-lot inspection. Consult the applicable official standard and edition for the actual plan."
+      },
+      {
+        "label": "ISO 28590:2017 — Introduction to the ISO 2859 series",
+        "href": "https://www.iso.org/standard/64622.html",
+        "description": "Official overview of the ISO 2859 series of attribute-sampling standards; ISO states this introduction was reviewed and confirmed in 2024."
+      }
+    ]
+  }
+}
