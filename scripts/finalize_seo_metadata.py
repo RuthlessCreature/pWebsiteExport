@@ -56,34 +56,36 @@ def concise_title(value: str) -> str:
 
 
 def compact_description_metadata(text: str) -> str:
+    def get_attr(tag: str, name: str) -> re.Match[str] | None:
+        return re.search(r'\b' + name + r'\s*=\s*(["\'])(.*?)\1', tag, flags=re.I | re.S)
+
     primary = None
-    for match in re.finditer(r'<meta\\b[^>]*>', text, flags=re.I):
+    for match in re.finditer(r'<meta\b[^>]*>', text, flags=re.I):
         tag = match.group(0)
-        name = re.search(r'\\bname=["\\\']([^"\\\']+)["\\\']', tag, flags=re.I)
-        if name and name.group(1).casefold() == 'description':
-            content = re.search(r'\\bcontent=["\\\'](.*?)["\\\']', tag, flags=re.I | re.S)
+        name = get_attr(tag, 'name')
+        if name and name.group(2).casefold() == 'description':
+            content = get_attr(tag, 'content')
             if content:
-                primary = seo.compact_description(html.unescape(content.group(1)))
+                primary = seo.compact_description(html.unescape(content.group(2)))
                 break
     if primary is None:
         return text
 
     def update_tag(match: re.Match[str]) -> str:
         tag = match.group(0)
-        name = re.search(r'\\bname=["\\\']([^"\\\']+)["\\\']', tag, flags=re.I)
-        prop = re.search(r'\\bproperty=["\\\']([^"\\\']+)["\\\']', tag, flags=re.I)
-        key = (name.group(1) if name else prop.group(1) if prop else '').casefold()
+        name = get_attr(tag, 'name')
+        prop = get_attr(tag, 'property')
+        key = (name.group(2) if name else prop.group(2) if prop else '').casefold()
         if key not in {'description', 'og:description', 'twitter:description'}:
             return tag
-        content = re.search(r'\\bcontent=(["\\\'])(.*?)(\\1)', tag, flags=re.I | re.S)
+        content = get_attr(tag, 'content')
         if not content:
             return tag
         quote = content.group(1)
         value = html.escape(primary, quote=True)
         return tag[:content.start()] + f'content={quote}{value}{quote}' + tag[content.end():]
 
-    return re.sub(r'<meta\\b[^>]*>', update_tag, text, flags=re.I)
-
+    return re.sub(r'<meta\b[^>]*>', update_tag, text, flags=re.I)
 def main() -> None:
     changed_titles = 0
     changed_alts = 0
