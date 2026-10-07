@@ -15,6 +15,23 @@ SITEMAP_LASTMOD={
 }
 
 def esc(v): return html.escape(str(v),quote=True)
+def compact_description(value, limit=160):
+    text=re.sub(r'\s+',' ',str(value)).strip()
+    if len(text)<=limit: return text
+    head=text[:limit-1]
+    sentence_matches=list(re.finditer(r'[.!?。！？](?=\s|$)',head))
+    sentence_end=sentence_matches[-1].end() if sentence_matches else 0
+    word_end=head.rfind(' ')
+    cut_at=sentence_end if sentence_end>=80 else word_end if word_end>=80 else limit-1
+    return head[:cut_at].rstrip(' \t\r\n,;:—–-')+'…'
+
+def set_meta_description(text, description):
+    tag=f'<meta name="description" content="{esc(description)}">'
+    pattern=r'<meta\s+name=["\']description["\'][^>]*>'
+    if re.search(pattern,text,re.I):
+        return re.sub(pattern,lambda _:tag,text,count=1,flags=re.I)
+    return re.sub(r'</head>',tag+'\n</head>',text,count=1,flags=re.I)
+
 def slugify(v): return re.sub(r'[^a-z0-9]+','-',v.lower()).strip('-')
 def load_solutions():
     out=[]
@@ -144,7 +161,7 @@ def inject(p):
     text=p.read_text(encoding='utf-8')
     text=label_footer_contacts(text)
     for a,b in REPL.items(): text=text.replace(a,b)
-    text=strip_seo(text); title,desc=title_desc(text); can=canonical(p); img=image_for(text)
+    text=strip_seo(text); title,desc=title_desc(text); desc=compact_description(desc); text=set_meta_description(text,desc); can=canonical(p); img=image_for(text)
     if p.name=='404.html': text=text.replace('</head>','<meta name="robots" content="noindex,follow"></head>')
     else: text=text.replace('</head>',seo_tags(title,desc,can,lang(p.relative_to(PUBLIC).as_posix()),img,alts=hreflang(p),extra=[crumbs(can,title)])+'\n</head>',1)
     seen=False
