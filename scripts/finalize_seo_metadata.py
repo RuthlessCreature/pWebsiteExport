@@ -6,6 +6,8 @@ import html
 import re
 from pathlib import Path
 
+import build_seo as seo
+
 PUBLIC = Path(__file__).resolve().parents[1] / 'public'
 PHOTO_ALT = {
     'ev-charging.jpg': 'EV charging equipment sourcing case study',
@@ -52,11 +54,42 @@ def concise_title(value: str) -> str:
     return clipped + suffix
 
 
+
+def compact_description_metadata(text: str) -> str:
+    primary = None
+    for match in re.finditer(r'<meta\\b[^>]*>', text, flags=re.I):
+        tag = match.group(0)
+        name = re.search(r'\\bname=["\\\']([^"\\\']+)["\\\']', tag, flags=re.I)
+        if name and name.group(1).casefold() == 'description':
+            content = re.search(r'\\bcontent=["\\\'](.*?)["\\\']', tag, flags=re.I | re.S)
+            if content:
+                primary = seo.compact_description(html.unescape(content.group(1)))
+                break
+    if primary is None:
+        return text
+
+    def update_tag(match: re.Match[str]) -> str:
+        tag = match.group(0)
+        name = re.search(r'\\bname=["\\\']([^"\\\']+)["\\\']', tag, flags=re.I)
+        prop = re.search(r'\\bproperty=["\\\']([^"\\\']+)["\\\']', tag, flags=re.I)
+        key = (name.group(1) if name else prop.group(1) if prop else '').casefold()
+        if key not in {'description', 'og:description', 'twitter:description'}:
+            return tag
+        content = re.search(r'\\bcontent=(["\\\'])(.*?)(\\1)', tag, flags=re.I | re.S)
+        if not content:
+            return tag
+        quote = content.group(1)
+        value = html.escape(primary, quote=True)
+        return tag[:content.start()] + f'content={quote}{value}{quote}' + tag[content.end():]
+
+    return re.sub(r'<meta\\b[^>]*>', update_tag, text, flags=re.I)
+
 def main() -> None:
     changed_titles = 0
     changed_alts = 0
     for path in PUBLIC.rglob('*.html'):
         text = path.read_text(encoding='utf-8')
+        text = compact_description_metadata(text)
 
         def shorten(match: re.Match[str]) -> str:
             nonlocal changed_titles
