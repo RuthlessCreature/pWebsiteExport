@@ -44,6 +44,8 @@ The Worker name is `pwebsite-export` and the production custom domain is **pomer
 
 The production SEO pipeline validates canonical URLs, XML sitemap coverage, reciprocal multilingual `hreflang`, buyer-guide coverage, case/landing-page generation, static internal links, HTML sitemap discovery, public contact source truth and the active IndexNow verification key. Successful production deployments submit the canonical URL set through IndexNow.
 
+The public `/tools/china-supplier-verification-kit/` page is generated from the supplier audit checklist CSV. It provides a browser-only evidence tracker, downloadable blank templates and a local review export; review notes are not uploaded or stored by the site. It is an evidence organizer, not supplier verification, certification or approval.
+
 ## Local development
 
 ```bash

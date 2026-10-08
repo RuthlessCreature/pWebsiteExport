@@ -64,3 +64,6 @@ Pomerol International Trade (Zhuhai) Co., Ltd. publishes support for requirement
 
 - Business overview: https://pomerol.trade/ai-overview.md
 - XML sitemap: https://pomerol.trade/sitemap.xml
+
+## Free buyer tool
+- [China supplier verification checklist and evidence tracker](https://pomerol.trade/tools/china-supplier-verification-kit/): Review legal identity, factory role, production scope, quality controls, documents and payment evidence; export a review CSV locally. The tool does not verify, certify or approve a supplier.
