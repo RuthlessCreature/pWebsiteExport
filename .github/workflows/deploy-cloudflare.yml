@@ -117,9 +117,9 @@ jobs:
           grep -q 'xmlns:image=' public/sitemap.xml
           ! grep -q '<lastmod>' public/sitemap.xml
           ! grep -Rni 'datePublished' public --include='*.html'
-          grep -q '"dateModified":"2026-10-08"' public/resources/guides/china-pre-shipment-inspection-guide/index.html
+          grep -q '"dateModified":"2026-10-27"' public/resources/guides/china-pre-shipment-inspection-guide/index.html
           test "$(grep -Roh 'dateModified' public --include='*.html' | wc -l)" -eq 1
-          grep -q 'Guide last reviewed: 2026-10-08' public/resources/guides/china-pre-shipment-inspection-guide/index.html
+          grep -q 'Guide last reviewed: 2026-10-27' public/resources/guides/china-pre-shipment-inspection-guide/index.html
           test -s public/llms.txt
           grep -q 'https://pomerol.trade/resources/guides/' public/llms.txt
           python -c "import sys; from pathlib import Path; sys.path.insert(0,'scripts'); import notify_indexnow; p=Path('public')/f'{notify_indexnow.KEY}.txt'; assert p.is_file() and p.read_text(encoding='utf-8').strip()==notify_indexnow.KEY; print('Active IndexNow verification file OK')"
