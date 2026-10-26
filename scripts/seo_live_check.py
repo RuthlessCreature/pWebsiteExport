@@ -27,17 +27,42 @@ class NoRedirect(HTTPRedirectHandler):
 def verify_home_redirect(url: str, expected_location: str) -> None:
     cache_key = f"seo_monitor={time_ns()}"
     separator = "&" if "?" in url else "?"
-    url = f"{url}{separator}{cache_key}"
+    original_url = f"{url}{separator}{cache_key}"
     expected_location = f"{expected_location}?{cache_key}"
     opener = build_opener(NoRedirect)
-    request = urllib.request.Request(url, headers={"User-Agent": UA, "Cache-Control": "no-cache"})
-    try:
-        response = opener.open(request, timeout=25)
-    except HTTPError as error:
-        response = error
-    location = response.headers.get("Location", "")
-    if response.code != 308 or location != expected_location:
-        raise RuntimeError(f"{url}: expected HTTP 308 to {expected_location}, got HTTP {response.code} to {location or '(no Location)'}")
+    current_url = original_url
+    redirects: list[tuple[int, str, str]] = []
+    for _ in range(5):
+        request = urllib.request.Request(current_url, headers={"User-Agent": UA, "Cache-Control": "no-cache"})
+        try:
+            response = opener.open(request, timeout=25)
+        except HTTPError as error:
+            response = error
+        location = response.headers.get("Location", "")
+        if response.code not in (301, 302, 303, 307, 308) or not location:
+            break
+        redirects.append((response.code, current_url, location))
+        if location == expected_location:
+            if response.code != 308:
+                raise RuntimeError(f"{current_url}: expected final HTTP 308 to {expected_location}, got HTTP {response.code}")
+            return
+        # Cloudflare first canonicalizes www to the apex while preserving the
+        # path and query. The apex then applies the app's /index.html -> /en/
+        # redirect. Validate this intermediate hop instead of requiring a
+        # single redirect from www directly to the localized homepage.
+        source = urlsplit(current_url)
+        target = urlsplit(location)
+        if not (
+            response.code == 301
+            and source.hostname == f"www.{HOST}"
+            and target.hostname == HOST
+            and target.path == source.path
+            and target.query == source.query
+        ):
+            raise RuntimeError(f"{current_url}: unexpected intermediate HTTP {response.code} redirect to {location}")
+        current_url = location
+    chain = " -> ".join(f"HTTP {code} {source} => {target}" for code, source, target in redirects)
+    raise RuntimeError(f"{original_url}: expected final HTTP 308 to {expected_location}; redirect chain: {chain or '(none)'}")
 
 
 def fetch(url: str, user_agent: str = UA) -> str:
